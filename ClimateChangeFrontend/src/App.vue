@@ -1,47 +1,61 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { RouterView } from 'vue-router'
+import HeaderComponent from './components/Header.vue'
+import FooterComponent from './components/Footer.vue'
+
+const user = JSON.parse(localStorage.getItem('user'))
+const first_name = user?.first_name || ''
+const last_name = user?.last_name || ''
+const userName = first_name && last_name ? `${first_name} ${last_name}` : 'Invitado'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <v-app>
+    <HeaderComponent :user-name="userName" />
+    
+    <v-main>
+      <v-container class="pa-0" fluid>
+        <RouterView />
+      </v-container>
+    </v-main>
+    
+    <FooterComponent />
+  </v-app>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<style>
+/* Podemos mantener algunas variables CSS globales */
+:root {
+  --color-primary: #3498db;
+  --color-primary-dark: #2980b9;
+  --color-secondary: #2ecc71;
+  --color-background: #f8f9fa;
+  --color-background-soft: #ffffff;
+  --color-background-mute: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-heading: #1e293b;
+  --color-text: #334155;
+  --color-text-light: #64748b;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+/* Algunas personalizaciones globales */
+.v-application {
+  background-color: var(--color-background) !important;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.text-primary {
+  color: var(--color-primary) !important;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+/* Estilos para tipografía */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 </style>
