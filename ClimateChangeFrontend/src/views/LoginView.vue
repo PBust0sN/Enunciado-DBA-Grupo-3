@@ -8,15 +8,28 @@ const rut = ref('')
 const password = ref('')
 const message = ref(null)
 const loading = ref(false)
+const form = ref(null)
+
+const rules = {
+  required: v => !!v || 'Este campo es requerido',
+  rut: v => /^[0-9]{7,8}-[0-9K]$/.test(v) || 'Formato RUT válido: 12345678-9',
+  minLength: v => (v && v.length >= 8) || 'Mínimo 8 caracteres'
+}
 
 const submit = async () => {
+  const { valid } = await form.value.validate()
+  if (!valid) return
+  
   message.value = null
   loading.value = true
   try {
     const res = await auth.login({ rut: rut.value, password: password.value })
-    message.value = { type: res.data.success , text: res.data.message }
-    // optionally store user info from res.data
+    message.value = { type: 'success', text: 'Inicio de sesión exitoso' }
+    localStorage.setItem('user', JSON.stringify(res.data))
     router.push({ name: 'home' })
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   } catch (err) {
     const text = err?.response?.data?.message || err.message || 'Login failed'
     message.value = { type: 'error', text }
@@ -27,242 +40,184 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-header">
-        <h2>Iniciar Sesión</h2>
-        <div class="auth-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
-            <path fill="currentColor" d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
-          </svg>
-        </div>
-      </div>
-      
-      <form @submit.prevent="submit" class="auth-form">
-        <div class="form-group">
-          <label for="rut">RUT</label>
-          <div class="input-with-icon">
-            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-              <path fill="currentColor" d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6M12,13C14.67,13 20,14.33 20,17V20H4V17C4,14.33 9.33,13 12,13M12,14.9C9.03,14.9 5.9,16.36 5.9,17V18.1H18.1V17C18.1,16.36 14.97,14.9 12,14.9Z" />
-            </svg>
-            <input 
-              id="rut" 
-              v-model="rut" 
-              type="text" 
-              placeholder="12345678-9" 
-              required 
-              pattern="^[0-9]{7,8}-[0-9K]$"
-              title="Formato RUT válido: 12345678-9"
-            />
+  <div class="login-bg">
+    <v-container class="fill-height" fluid>
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="6" lg="5">
+          <v-card 
+            class="login-card"
+            variant="outlined"
+            rounded="lg"
+            elevation="8"
+          >
+            <div class="login-banner">
+              <div class="login-overlay">
+                <h2 class="text-h4 font-weight-bold text-white">Bienvenido</h2>
+                <p class="text-body-1 text-white">Sistema de Monitoreo del Cambio Climático</p>
+              </div>
+            </div>
+
+            <v-card-item class="pt-6">
+              <v-card-title class="text-h5 text-primary mb-4">
+                <v-icon icon="mdi-login" class="mr-2"></v-icon>
+                Iniciar Sesión
+              </v-card-title>
+
+              <v-card-text>
+                <v-form ref="form" @submit.prevent="submit" class="pt-2">
+                  <v-text-field
+                    v-model="rut"
+                    :rules="[rules.required, rules.rut]"
+                    label="RUT"
+                    placeholder="12345678-9"
+                    prepend-inner-icon="mdi-account-card-details"
+                    variant="outlined"
+                    density="comfortable"
+                    color="primary"
+                    bg-color="surface"
+                    class="rounded-lg input-field"
+                  ></v-text-field>
+
+                  <v-text-field
+                    v-model="password"
+                    :rules="[rules.required, rules.minLength]"
+                    label="Contraseña"
+                    type="password"
+                    prepend-inner-icon="mdi-lock"
+                    variant="outlined"
+                    density="comfortable"
+                    hint="La contraseña debe tener al menos 8 caracteres"
+                    persistent-hint
+                    color="primary"
+                    bg-color="surface"
+                    class="rounded-lg input-field"
+                  ></v-text-field>
+
+                  <v-slide-y-transition>
+                    <v-alert
+                      v-if="message"
+                      :type="message.type"
+                      variant="tonal"
+                      class="mt-4"
+                      border="start"
+                      density="comfortable"
+                      closable
+                      rounded="lg"
+                    >
+                      <div class="d-flex align-center">
+                        <v-icon
+                          :icon="message.type === 'success' ? 'mdi-check-circle' : 'mdi-alert-circle'"
+                          start
+                          class="mr-2"
+                        ></v-icon>
+                        {{ message.text }}
+                      </div>
+                    </v-alert>
+                  </v-slide-y-transition>
+
+                  <v-btn
+                    class="mt-6 login-btn"
+                    size="large"
+                    block
+                    type="submit"
+                    :loading="loading"
+                    :disabled="loading"
+                    color="primary"
+                    rounded="lg"
+                    elevation="2"
+                  >
+                    <v-icon start icon="mdi-login-variant" class="mr-1"></v-icon>
+                    {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+                  </v-btn>
+                </v-form>
+              </v-card-text>
+
+              <v-card-text class="text-center pt-0">
+                <div class="divider-container">
+                  <v-divider thickness="2"></v-divider>
+                </div>
+                <p class="text-body-2 mt-4">
+                  ¿No tienes una cuenta?
+                  <v-btn
+                    variant="text"
+                    color="primary"
+                    density="comfortable"
+                    to="/register"
+                    class="px-1 font-weight-bold text-decoration-underline"
+                  >
+                    Regístrate
+                    <v-icon end icon="mdi-arrow-right" size="small"></v-icon>
+                  </v-btn>
+                </p>
+              </v-card-text>
+            </v-card-item>
+          </v-card>
+          
+          <div class="text-center mt-4 text-caption text-disabled">
+            &copy; 2025 Sistema de Monitoreo del Cambio Climático
           </div>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <div class="input-with-icon">
-            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-              <path fill="currentColor" d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
-            </svg>
-            <input 
-              id="password" 
-              v-model="password" 
-              type="password" 
-              placeholder="********" 
-              required 
-              minlength="8"
-            />
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-submit" :disabled="loading">
-            <span v-if="loading">
-              <svg class="spin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                <path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
-              </svg>
-              Iniciando sesión...
-            </span>
-            <span v-else>Iniciar Sesión</span>
-          </button>
-        </div>
-      </form>
-
-      <div v-if="message" class="message" :class="message.type">
-        <svg v-if="message.type === 'success'" class="message-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-          <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
-        </svg>
-        <svg v-else class="message-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-          <path fill="currentColor" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
-        </svg>
-        {{ message.text }}
-      </div>
-
-      <div class="auth-footer">
-        <p>¿No tienes una cuenta? <router-link to="/register">Regístrate</router-link></p>
-      </div>
-    </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <style scoped>
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 200px);
-  padding: 2rem 1rem;
+.login-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(240, 244, 247, 0.8) 0%, rgba(214, 234, 248, 0.8) 100%);
+  background-size: cover;
+  background-attachment: fixed;
 }
 
-.auth-card {
-  width: 100%;
-  max-width: 450px;
-  background: var(--color-background-soft);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
+.login-card {
+  border: none;
+  overflow: hidden;
 }
 
-.auth-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.auth-header h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--color-heading);
-}
-
-.auth-icon {
-  color: var(--color-primary);
-  background-color: var(--color-background-mute);
-  padding: 0.7rem;
-  border-radius: 50%;
-}
-
-.auth-form {
-  margin-bottom: 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.input-with-icon {
+.login-banner {
+  background-image: url('https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+  background-size: cover;
+  background-position: center;
+  height: 180px;
   position: relative;
 }
 
-.input-icon {
+.login-overlay {
   position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-light);
-}
-
-.input-with-icon input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.8rem;
-  font-size: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background-color: var(--color-background);
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.input-with-icon input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
-}
-
-.form-actions {
-  margin-top: 2rem;
-}
-
-.btn-submit {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(46, 204, 113, 0.8));
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.btn-submit:hover {
-  background-color: var(--color-primary-dark);
-}
-
-.btn-submit:disabled {
-  background-color: var(--color-text-light);
-  cursor: not-allowed;
-}
-
-.message {
-  margin-top: 1rem;
   padding: 1rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
 }
 
-.message.success {
-  background-color: rgba(46, 204, 113, 0.15);
-  color: #27ae60;
+.input-field {
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
 }
 
-.message.error {
-  background-color: rgba(231, 76, 60, 0.15);
-  color: #e74c3c;
+.input-field:hover {
+  transform: translateY(-2px);
 }
 
-.message-icon {
-  margin-right: 0.5rem;
-  flex-shrink: 0;
-}
-
-.spin-icon {
-  animation: spin 1s linear infinite;
-  margin-right: 0.5rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.auth-footer {
-  margin-top: 2rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--color-text-light);
-}
-
-.auth-footer a {
-  color: var(--color-primary);
-  text-decoration: none;
+.login-btn {
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
   font-weight: 500;
 }
 
-.auth-footer a:hover {
-  text-decoration: underline;
+.login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.divider-container {
+  margin: 24px 0 16px;
 }
 </style>
