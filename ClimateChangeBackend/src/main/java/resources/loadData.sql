@@ -9,21 +9,21 @@ INSERT INTO users (first_name, last_name, rut, password, email, role) VALUES
 
 -- Poblar tabla de puntos de medición (latitud y longitud estan multiplicados por 1,000,000 para evitar decimales)
 INSERT INTO measure_points (latitud, longitud, sensor_type) VALUES
-                                                                (-33456789, -70123456, 'Temperatura'),
-                                                                (-33456123, -70124567, 'Emisiones de CO2'),
-                                                                (-33455678, -70125678, 'Nivel del mar'),
-                                                                (-33454321, -70126789, 'Masa de hielo'),
-                                                                (-33453456, -70127890, 'Temperatura'),
-                                                                (-33452345, -70128901, 'Emisiones de CO2'),
-                                                                (-33451234, -70129012, 'Nivel del mar'),
-                                                                (-33450123, -70130123, 'Masa de hielo'),
-                                                                (-33449012, -70131234, 'Temperatura'),
-                                                                (-33448901, -70132345, 'Emisiones de CO2'),
-                                                                (-33447890, -70133456, 'Nivel del mar'),
-                                                                (-33446789, -70134567, 'Masa de hielo'),
-                                                                (-33445678, -70135678, 'Temperatura'),
-                                                                (-33444567, -70136789, 'Emisiones de CO2'),
-                                                                (-33443456, -70137890, 'Nivel del mar');
+                                                                (-33.456789, -70.123456, 'Temperatura'),
+                                                                (-33.456123, -70.124567, 'Emisiones de CO2'),
+                                                                (-33.612125, -71.632559, 'Nivel del mar'),
+                                                                (-33.454321, -70.126789, 'Masa de hielo'),
+                                                                (-33.453456, -70.127890, 'Temperatura'),
+                                                                (-33.452345, -70.128901, 'Emisiones de CO2'),
+                                                                (-33.451234, -70.129012, 'Nivel del mar'),
+                                                                (-33.450123, -70.130123, 'Masa de hielo'),
+                                                                (-33.449012, -70.131234, 'Temperatura'),
+                                                                (-33.448901, -70.132345, 'Emisiones de CO2'),
+                                                                (-33.447890, -70.133456, 'Nivel del mar'),
+                                                                (-33.446789, -70.134567, 'Masa de hielo'),
+                                                                (-33.445678, -70.135678, 'Temperatura'),
+                                                                (-33.444567, -70.136789, 'Emisiones de CO2'),
+                                                                (-33.443456, -70.137890, 'Nivel del mar');
 
 -- Poblar tabla de conjuntos de datos
 INSERT INTO dataset (name_dataset, description_dataset, source_dataset, date_authorization_dataset) VALUES
