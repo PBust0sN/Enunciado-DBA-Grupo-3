@@ -100,7 +100,7 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
 
     @Override
     public Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon){
-        String sql = "SELECT idMeasurePoints, Latitud, Longitud, SensorType FROM measure_points WHERE latitud = ? AND longitud = ?";
+        String sql = "SELECT id_measure_points, latitud, longitud, sensor_type FROM measure_points WHERE latitud = ? AND longitud = ?";
         try {
             MeasurePointsEntity measurePointsEntity = jdbcTemplate.queryForObject(
                     sql,
@@ -115,7 +115,7 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
     }
 
     @Override
-    public List<Optional<MeasurePointsEntity>> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude){
+    public List<MeasurePointsEntity> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude){
         String sql = """ 
                     SELECT co2mp.id_measure_points,
                     co2mp.latitud,
@@ -138,13 +138,13 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                         ) < 50;
                     """;
         try{
-            MeasurePointsEntity measurePointsEntity = jdbcTemplate.queryForObject(
+            List<MeasurePointsEntity> measurePointsEntity = jdbcTemplate.query(
                     sql,
                     new BeanPropertyRowMapper<>(MeasurePointsEntity.class),
                     latitude,
                     longitude
             );
-            return List.of(Optional.ofNullable(measurePointsEntity));
+            return measurePointsEntity;
         }catch (EmptyResultDataAccessException e){
             return List.of();
         }

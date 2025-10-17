@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -22,6 +23,10 @@ public class Datasetservice {
 
     public DatasetEntity getDatasetByName(String nameDataset){
         return datasetRepository.findByName(nameDataset).get();
+    }
+
+    public List<DatasetEntity> getAll(){
+        return datasetRepository.findAll();
     }
 
     public void createDataset(DatasetRequest datasetRequest){
