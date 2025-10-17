@@ -40,16 +40,16 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
     }
 
     @Override
-    public List<Optional<MeasurePointsEntity>> findAll(){
-        String sql = "SELECT idMeasurePoints, Latitud, Longitud, SensorType FROM measure_points";
+    public List<MeasurePointsEntity> findAll(){
+        String sql = "SELECT * FROM measure_points";
         try {
-            MeasurePointsEntity measurePointsEntity = jdbcTemplate.queryForObject(
+            List<MeasurePointsEntity> measurePointsEntity = jdbcTemplate.query(
                     sql,
                     new BeanPropertyRowMapper<>(MeasurePointsEntity.class)
             );
-            return List.of(Optional.ofNullable(measurePointsEntity));
+            return measurePointsEntity;
         } catch (EmptyResultDataAccessException e) {
-            return List.of(Optional.empty());
+            return List.of(null);
         }
     }
 
