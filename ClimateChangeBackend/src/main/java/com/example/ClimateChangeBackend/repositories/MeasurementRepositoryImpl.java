@@ -1,10 +1,14 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
 import com.example.ClimateChangeBackend.entities.MeasurementEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -49,6 +53,26 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
     public int deleteById(long id) {
         String sql = "DELETE FROM measurements WHERE id_measurement = ?";
         return jdbcTemplate.update(sql, id);
+    }
+
+
+    @Override
+    public List<AnomaliaDTO> tempetureAnomalyCalculation(){
+        String sql = """
+                     SELECT
+                     id_measure_points,
+                     AVG(CASE WHEN date_measurement >= CURRENT_DATE - INTERVAL '1 year' THEN value_measurement END) - AVG(value_measurement) AS anomalia 
+                     FROM measurements 
+                     GROUP BY id_measure_points""";
+        try {
+            List<AnomaliaDTO> anomaliaDTO = jdbcTemplate.query(
+                    sql,
+                    new BeanPropertyRowMapper<>(AnomaliaDTO.class)
+            );
+            return anomaliaDTO;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
 }

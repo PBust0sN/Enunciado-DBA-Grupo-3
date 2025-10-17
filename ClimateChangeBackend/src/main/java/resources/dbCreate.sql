@@ -34,3 +34,63 @@ CREATE TABLE IF NOT EXISTS measurements (
     FOREIGN KEY (id_measure_points) REFERENCES measure_points(id_measure_points),
     FOREIGN KEY (id_dataset) REFERENCES dataset(id_dataset)
 );
+
+
+/*  CONSULTA 1:
+ Cálculo de Anomalía de Temperatura: Escribe una consulta SQL que,
+para cada punto de medición, calcule la temperatura promedio del último
+año y la compare con el promedio histórico de ese mismo punto. Muestra el
+ID del punto de medición y la diferencia (anomalía) en grados.
+ */
+
+
+-- TRIGGER FUNCION
+CREATE OR REPLACE FUNCTION calcular_anomalia_punto()
+    RETURNS TRIGGER AS $$
+DECLARE
+    promedio_historico DOUBLE PRECISION;
+    promedio_ultimo_anio DOUBLE PRECISION;
+    anomalia DOUBLE PRECISION;
+BEGIN
+    -- Calcular promedio histórico del punto
+    SELECT AVG(value_measurement)
+    INTO promedio_historico
+    FROM measurements
+    WHERE id_measure_points = NEW.id_measure_points;
+
+    -- Calcular promedio del último año del punto
+    SELECT AVG(value_measurement)
+    INTO promedio_ultimo_anio
+    FROM measurements
+    WHERE id_measure_points = NEW.id_measure_points
+      AND date_measurement >= CURRENT_DATE - INTERVAL '1 year';
+
+    -- Calcular anomalía
+    anomalia := promedio_ultimo_anio - promedio_historico;
+
+    -- Mostrar el resultado en consola (no se guarda)
+    RAISE NOTICE 'Punto % -> Anomalía: %',
+        NEW.id_measure_points, anomalia;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- TRIGGER
+CREATE TRIGGER trg_calcular_anomalia_punto
+    AFTER INSERT OR UPDATE
+    ON measurements
+    FOR EACH ROW
+EXECUTE FUNCTION calcular_anomalia_punto();
+
+-- INDEX BY DATE
+CREATE INDEX idx_measurements_date
+    ON measurements (date_measurement);
+
+/* CONSULTA 5:
+  Simulación de Interpolación de Datos: Escribe un procedimiento
+almacenado llamado interpolar_datos_semanales que reciba un ID
+de dataset. El procedimiento debe calcular el promedio semanal de las
+mediciones y almacenarlo en una tabla de resumen, llenando los días sin
+datos con el promedio semanal.
+ */
