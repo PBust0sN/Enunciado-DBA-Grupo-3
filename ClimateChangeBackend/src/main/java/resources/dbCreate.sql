@@ -36,34 +36,20 @@ CREATE TABLE IF NOT EXISTS measurements (
 );
 
 -- Creación de la vista materializada
-CREATE MATERIALIZED VIEW tendencia_mensual AS 
-SELECT 
-  d.name_dataset,
-  DATE_TRUNC('month', m.date_measurement) AS month,
+CREATE MATERIALIZED VIEW tendencia_mensual AS
+SELECT
+    mp.sensor_type,
+    EXTRACT(YEAR FROM m.date_measurement) AS year,
+  EXTRACT(MONTH FROM m.date_measurement) AS month,
   AVG(m.value_measurement) AS average
 FROM measurements m
-JOIN dataset d ON m.id_dataset = d.id_dataset
-GROUP BY d.id_dataset, DATE_TRUNC('month', m.date_measurement)
-ORDER BY d.name_dataset, month;
+    JOIN dataset d ON m.id_dataset = d.id_dataset
+    JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
+GROUP BY mp.sensor_type, year, month
+ORDER BY year, month;
 
-
--- Indexación para agilizar
+-- Indexación para refrescar
 CREATE UNIQUE INDEX idx_tendencia_mensual_unique
-ON tendencia_mensual (name_dataset, month);
-
--- Creación de la función de refresco
-CREATE OR REPLACE FUNCTION refresh_tendencia_mensual()
-RETURNS TRIGGER AS $$
-BEGIN
-  REFRESH MATERIALIZED VIEW CONCURRENTLY tendencia_mensual;
-  RETURN NULL; 
-END;
-$$ LANGUAGE plpgsql;
+    ON tendencia_mensual (sensor_type, year, month);
 
 
--- Creación del trigger para refrescar la tabla
-CREATE TRIGGER trg_refresh_tendencia_mensual
-AFTER INSERT OR UPDATE OR DELETE
-ON measurements
-FOR EACH STATEMENT
-EXECUTE FUNCTION refresh_tendencia_mensual();
