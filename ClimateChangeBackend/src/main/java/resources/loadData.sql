@@ -53,3 +53,44 @@ INSERT INTO measurements (value_measurement, date_measurement, id_measure_points
                                                                                                   (3.52, '2023-07-16 17:00:00+00', 15, 5),   -- Nivel del mar
                                                                                                   (11950.7, '2023-07-17 09:30:00+00', 8, 6), -- Masa de hielo
                                                                                                   (29.5, '2023-07-18 10:45:00+00', 1, 1);    -- Temperatura
+DROP FUNCTION get_aggregated_measurements(bigint,timestamp without time zone,timestamp without time zone)
+
+-- Sentencia 6:
+CREATE OR REPLACE FUNCTION get_aggregated_measurements(
+    p_id_dataset BIGINT,
+    p_start_date TIMESTAMP,
+    p_end_date TIMESTAMP
+)
+RETURNS TABLE (
+    period_start DATE,
+    avg_value DOUBLE PRECISION
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Si el rango es menor o igual a 90 días → agrupamos por semana
+    IF (p_end_date - p_start_date) <= INTERVAL '90 days' THEN
+        RETURN QUERY
+    SELECT
+        date_trunc('week', m.date_measurement)::DATE AS period_start,
+        AVG(m.value_measurement) AS avg_value
+    FROM measurements m
+    WHERE m.id_dataset = p_id_dataset
+      AND m.date_measurement BETWEEN p_start_date AND p_end_date
+    GROUP BY date_trunc('week', m.date_measurement)
+    ORDER BY period_start;
+
+    -- Si el rango es mayor a 90 días → agrupamos por mes
+    ELSE
+            RETURN QUERY
+    SELECT
+        date_trunc('month', m.date_measurement)::DATE AS period_start,
+        AVG(m.value_measurement) AS avg_value
+    FROM measurements m
+    WHERE m.id_dataset = p_id_dataset
+      AND m.date_measurement BETWEEN p_start_date AND p_end_date
+    GROUP BY date_trunc('month', m.date_measurement)
+    ORDER BY period_start;
+    END IF;
+END;
+$$;
