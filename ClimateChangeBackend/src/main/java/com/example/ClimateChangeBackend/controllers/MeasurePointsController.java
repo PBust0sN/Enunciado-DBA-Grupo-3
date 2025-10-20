@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/measurePoints")
 public class MeasurePointsController {
     private MeasurePointsService  measurePointsService;
-
+    
     @GetMapping("/get/{id}")
     public ResponseEntity<Optional<MeasurePointsEntity>> findById(@PathVariable("id") Long id){
         Optional<MeasurePointsEntity>  measurePointsEntity = measurePointsService.findById(id);
