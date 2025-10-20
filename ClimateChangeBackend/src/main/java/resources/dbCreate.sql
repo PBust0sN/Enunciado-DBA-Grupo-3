@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS measure_points(
     id_measure_points SERIAL PRIMARY KEY,
-    latitud DOUBLE PRECISION NOT NULL,
-    longitud DOUBLE PRECISION NOT NULL,
+    latitud DOUBLE PRECISION,
+    longitud DOUBLE PRECISION,
     sensor_type VARCHAR(60) NOT NULL
 );
 
