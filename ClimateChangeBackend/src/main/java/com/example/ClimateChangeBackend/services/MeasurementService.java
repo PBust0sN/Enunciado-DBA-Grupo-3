@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.services;
 
+import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
 import com.example.ClimateChangeBackend.entities.MeasurementEntity;
 import com.example.ClimateChangeBackend.repositories.MeasurementRepository;
 import lombok.AllArgsConstructor;
@@ -36,5 +37,7 @@ public class MeasurementService {
 
     public List<Map<String, Object>> extremeEventDetection() {
         return measurementRepository.extremeEventDetection();
+    public List<AnomaliaDTO> tempetureAnomalyCalculation(){
+        return measurementRepository.tempetureAnomalyCalculation();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
 import com.example.ClimateChangeBackend.entities.MeasurementEntity;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface MeasurementRepository {
     MeasurementEntity save(MeasurementEntity measurementEntity);
     int deleteById(long id);
     List<Map<String, Object>> extremeEventDetection();
+    List<AnomaliaDTO> tempetureAnomalyCalculation();
 }
