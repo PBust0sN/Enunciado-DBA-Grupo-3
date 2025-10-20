@@ -1,6 +1,7 @@
 package com.example.ClimateChangeBackend.controllers;
 
 import com.example.ClimateChangeBackend.dtos.DatasetRequest;
+import com.example.ClimateChangeBackend.dtos.InterpolarDatosSemDTO;
 import com.example.ClimateChangeBackend.dtos.MessageResponse;
 import com.example.ClimateChangeBackend.dtos.TSMeasureDTO;
 import com.example.ClimateChangeBackend.entities.DatasetEntity;
@@ -64,6 +65,12 @@ public class DatasetController {
     }
 
 
+    @GetMapping("/interpolar-datos-semanales/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
+    public ResponseEntity<List<InterpolarDatosSemDTO>> interpolar_datos_semanales(@PathVariable("id") Long id_dataset){
+        List<InterpolarDatosSemDTO> datos = datasetService.interpolar_datos_semanales(id_dataset);
+        return ResponseEntity.ok().body(datos);
+    }
 }
 
 

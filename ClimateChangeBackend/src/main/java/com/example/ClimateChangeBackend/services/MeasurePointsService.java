@@ -20,7 +20,7 @@ public class MeasurePointsService {
         return  measurePointsRepository.findById(id);
     }
 
-    public List<Optional<MeasurePointsEntity>> findAll(){
+    public List<MeasurePointsEntity> findAll(){
         return   measurePointsRepository.findAll();
     }
 

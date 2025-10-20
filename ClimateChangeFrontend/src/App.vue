@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router'
 import HeaderComponent from './components/Header.vue'
 import FooterComponent from './components/Footer.vue'
+import Sidebar from './components/Sidebar.vue'
 
 const user = JSON.parse(localStorage.getItem('user'))
 const first_name = user?.first_name || ''
@@ -12,7 +13,7 @@ const userName = first_name && last_name ? `${first_name} ${last_name}` : 'Invit
 <template>
   <v-app>
     <HeaderComponent :user-name="userName" />
-    
+    <Sidebar />
     <v-main>
       <v-container class="pa-0" fluid>
         <RouterView />

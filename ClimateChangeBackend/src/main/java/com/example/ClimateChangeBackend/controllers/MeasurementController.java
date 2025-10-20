@@ -1,18 +1,21 @@
 package com.example.ClimateChangeBackend.controllers;
 
+import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
 import com.example.ClimateChangeBackend.entities.MeasurementEntity;
 import com.example.ClimateChangeBackend.services.MeasurementService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @RestController
-@RequestMapping("/measurements")
+@RequestMapping("/api/v1/measurements")
 public class MeasurementController {
 
     private MeasurementService measurementService;
@@ -47,5 +50,12 @@ public class MeasurementController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/calculate-anomalia")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
+    public ResponseEntity<List<AnomaliaDTO>> calculateAnomalia(){
+        List<AnomaliaDTO> anomaliaDTO = measurementService.tempetureAnomalyCalculation();
+        return ResponseEntity.ok().body(anomaliaDTO);
     }
 }

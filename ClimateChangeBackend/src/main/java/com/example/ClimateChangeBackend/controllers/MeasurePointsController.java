@@ -26,8 +26,9 @@ public class MeasurePointsController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Optional<MeasurePointsEntity>>> getAll(){
-        List<Optional<MeasurePointsEntity>> measurePointsEntities = measurePointsService.findAll();
+    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    public ResponseEntity<List<MeasurePointsEntity>> getAll(){
+        List<MeasurePointsEntity> measurePointsEntities = measurePointsService.findAll();
         return ResponseEntity.ok().body(measurePointsEntities);
     }
 
