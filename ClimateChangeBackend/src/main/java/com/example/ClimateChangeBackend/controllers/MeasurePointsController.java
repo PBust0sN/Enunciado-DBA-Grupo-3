@@ -47,4 +47,16 @@ public class MeasurePointsController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/getByLatLon/{lat}{lon}")
+    public ResponseEntity<MeasurePointsEntity> getByLatLon(@PathVariable("lat") double lat,  @PathVariable("lon") double lon){
+        Optional<MeasurePointsEntity> point = measurePointsService.getMeasurePointByLatitudAndLongitud(lat,lon);
+        return ResponseEntity.ok().body(point.get());
+    }
+
+    @GetMapping("/getLessThan50/{lat}/{lon}")
+    public ResponseEntity<List<MeasurePointsEntity>> getLessThan50(@PathVariable("lat") double lat, @PathVariable("lon") double lon){
+        List<MeasurePointsEntity> measurePoints = measurePointsService.getPointsLessThan50(lat, lon);
+        return ResponseEntity.ok().body(measurePoints);
+    }
 }

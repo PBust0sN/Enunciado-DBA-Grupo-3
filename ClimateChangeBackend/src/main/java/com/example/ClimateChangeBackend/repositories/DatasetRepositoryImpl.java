@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.TSMeasureDTO;
 import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
 import com.example.ClimateChangeBackend.dtos.InterpolarDatosSemDTO;
 import com.example.ClimateChangeBackend.entities.DatasetEntity;
@@ -10,9 +11,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -108,6 +108,24 @@ public class DatasetRepositoryImpl implements DatasetRepository {
         return datasetEntity;
     }
 
+    public List<TSMeasureDTO> timeSeriesMeasure(Long id_dataset, LocalDate startDate, LocalDate endDate) {
+        String sql = """
+        SELECT gm.period_start, gm.avg_value
+        FROM public.get_aggregated_measurements(?, ?, ?) AS gm
+        """;
+
+        Timestamp startTs = Timestamp.valueOf(startDate.atStartOfDay());
+        Timestamp endTs = Timestamp.valueOf(endDate.atTime(23, 59, 59)); // opcional: incluir fin del día
+
+        try {
+            return jdbcTemplate.query(
+                    sql,
+                    new Object[]{id_dataset, startTs, endTs},
+                    new int[]{Types.BIGINT, Types.TIMESTAMP, Types.TIMESTAMP},
+                    (rs, rowNum) -> {
+                        TSMeasureDTO dto = new TSMeasureDTO();
+                        dto.setAvgValue(rs.getDouble("avg_value"));
+                        dto.setPeriodStart(rs.getDate("period_start"));
     @Override
     public List<InterpolarDatosSemDTO> interpolar_datos_semanales(Long id_dataset) {
         String sql = """
@@ -127,7 +145,7 @@ public class DatasetRepositoryImpl implements DatasetRepository {
                     }
             );
         } catch (EmptyResultDataAccessException e) {
-            return List.of(); // devuelve lista vacía en vez de null
+            return new ArrayList<>(); // devuelve lista vacía en vez de null
         }
     }
 }

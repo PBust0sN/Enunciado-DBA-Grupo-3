@@ -97,4 +97,56 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                 measurePointsEntity.getSensorType(),
                 measurePointsEntity.getIdMeasurePoints());
     }
+
+    @Override
+    public Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon){
+        String sql = "SELECT id_measure_points, latitud, longitud, sensor_type FROM measure_points WHERE latitud = ? AND longitud = ?";
+        try {
+            MeasurePointsEntity measurePointsEntity = jdbcTemplate.queryForObject(
+                    sql,
+                    new BeanPropertyRowMapper<>(MeasurePointsEntity.class),
+                    lat,
+                    lon
+            );
+            return Optional.ofNullable(measurePointsEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<MeasurePointsEntity> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude){
+        String sql = """ 
+                    SELECT co2mp.id_measure_points,
+                    co2mp.latitud,
+                    co2mp.longitud,
+                    co2mp.sensor_type
+                    FROM measure_points AS mp
+                    JOIN measure_points AS co2mp
+                    ON co2mp.sensor_type = 'Emisiones de CO2'
+                    WHERE mp.sensor_type = 'Temperatura'
+                      AND mp.latitud = ?
+                      AND mp.longitud = ?
+                      AND (
+                            6371 * 2 * ASIN(
+                                SQRT(
+                                    POWER(SIN(RADIANS(co2mp.latitud - mp.latitud) / 2), 2) +
+                                    COS(RADIANS(mp.latitud)) * COS(RADIANS(co2mp.latitud)) *
+                                    POWER(SIN(RADIANS(co2mp.longitud - mp.longitud) / 2), 2)
+                                )
+                            )
+                        ) < 50;
+                    """;
+        try{
+            List<MeasurePointsEntity> measurePointsEntity = jdbcTemplate.query(
+                    sql,
+                    new BeanPropertyRowMapper<>(MeasurePointsEntity.class),
+                    latitude,
+                    longitude
+            );
+            return measurePointsEntity;
+        }catch (EmptyResultDataAccessException e){
+            return List.of();
+        }
+    }
 }

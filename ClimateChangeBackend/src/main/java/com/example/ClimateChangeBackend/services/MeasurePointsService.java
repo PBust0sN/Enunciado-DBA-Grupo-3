@@ -41,4 +41,17 @@ public class MeasurePointsService {
                 .build();
         return measurePointsRepository.update(measurePointsEntity);
     }
+
+    public Optional<MeasurePointsEntity> getMeasurePointByLatitudAndLongitud(double latitud, double longitud) {
+        return measurePointsRepository.findByLatitudeAndLongitude(latitud, longitud);
+    }
+
+    public List<MeasurePointsEntity> getPointsLessThan50(double lat, double lon) {
+        MeasurePointsEntity point = measurePointsRepository.findByLatitudeAndLongitude(lat,lon)
+                .orElseThrow(() -> new RuntimeException("No se encontró el punto con esas coordenadas"));
+        if (point.getSensorType().equals("Temperatura")){
+            new RuntimeException("Este no es un punto de Temperatura");
+        }
+        return measurePointsRepository.getPointsLessThan50ByLatitudeAndLongitude(lat, lon);
+    }
 }

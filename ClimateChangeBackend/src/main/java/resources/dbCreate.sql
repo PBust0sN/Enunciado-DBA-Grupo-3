@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS measurements (
     FOREIGN KEY (id_measure_points) REFERENCES measure_points(id_measure_points),
     FOREIGN KEY (id_dataset) REFERENCES dataset(id_dataset)
 );
+);
 
 
 /*  CONSULTA 1:
