@@ -43,8 +43,10 @@ public class Datasetservice {
         datasetRepository.save(datasetEntity);
     }
 
-    public List<TSMeasureDTO> timeSeriesMeasure(Long id_dataset, LocalDate startDate, LocalDate endDate){
+    public List<TSMeasureDTO> timeSeriesMeasure(Long id_dataset, LocalDate startDate, LocalDate endDate) {
         return datasetRepository.timeSeriesMeasure(id_dataset, startDate, endDate);
+    }
+
     public List<InterpolarDatosSemDTO> interpolar_datos_semanales(Long id_dataset){
         return  datasetRepository.interpolar_datos_semanales(id_dataset);
     }

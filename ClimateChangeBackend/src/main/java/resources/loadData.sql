@@ -1,99 +1,5 @@
 -- Poblar tabla de usuarios (password default para todos es 'Hola1234')
 INSERT INTO users (first_name, last_name, rut, password, email, role) VALUES
-                                                                          ('Juan', 'Pérez', '12345678-9', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'juan.perez@ejemplo.com', 'ROLE_ADMIN'),
-                                                                          ('María', 'González', '98765432-1', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'maria.gonzalez@ejemplo.com', 'ROLE_USER'),
-                                                                          ('Carlos', 'Rodríguez', '11111111-1', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'carlos.rodriguez@ejemplo.com', 'ROLE_USER'),
-                                                                          ('Ana', 'Martínez', '22222222-2', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'ana.martinez@ejemplo.com', 'ROLE_ADMIN'),
-                                                                          ('Pedro', 'Sánchez', '33333333-3', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'pedro.sanchez@ejemplo.com', 'ROLE_USER'),
-                                                                          ('Laura', 'Díaz', '44444444-4', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'laura.diaz@ejemplo.com', 'ROLE_USER');
-
--- Poblar tabla de puntos de medición (latitud y longitud estan multiplicados por 1,000,000 para evitar decimales)
-INSERT INTO measure_points (latitud, longitud, sensor_type) VALUES
-                                                                (-33.456789, -70.123456, 'Temperatura'),
-                                                                (-33.456123, -70.124567, 'Emisiones de CO2'),
-                                                                (-33.612125, -71.632559, 'Nivel del mar'),
-                                                                (-33.454321, -70.126789, 'Masa de hielo'),
-                                                                (-33.453456, -70.127890, 'Temperatura'),
-                                                                (-33.452345, -70.128901, 'Emisiones de CO2'),
-                                                                (-33.451234, -70.129012, 'Nivel del mar'),
-                                                                (-33.450123, -70.130123, 'Masa de hielo'),
-                                                                (-33.449012, -70.131234, 'Temperatura'),
-                                                                (-33.448901, -70.132345, 'Emisiones de CO2'),
-                                                                (-33.447890, -70.133456, 'Nivel del mar'),
-                                                                (-33.446789, -70.134567, 'Masa de hielo'),
-                                                                (-33.445678, -70.135678, 'Temperatura'),
-                                                                (-33.444567, -70.136789, 'Emisiones de CO2'),
-                                                                (-33.443456, -70.137890, 'Nivel del mar');
-
--- Poblar tabla de conjuntos de datos
-INSERT INTO dataset (name_dataset, description_dataset, source_dataset, date_authorization_dataset) VALUES
-                                                                                                        ('Clima Santiago 2023', 'Datos climáticos recopilados durante el año 2023', 'Estación Meteorológica Central', '2023-01-15'),
-                                                                                                        ('Contaminación Urbana', 'Mediciones de contaminantes en zona metropolitana', 'Red de Monitoreo Ambiental', '2023-02-20'),
-                                                                                                        ('Radiación Solar', 'Niveles de radiación UV en distintos puntos de la ciudad', 'Instituto Meteorológico', '2023-03-10'),
-                                                                                                        ('Monitoreo CO2 Global', 'Datos sobre emisiones de CO2 en diferentes regiones', 'Red Global Climática', '2023-04-05'),
-                                                                                                        ('Niveles Oceánicos 2023', 'Mediciones de nivel del mar en costas chilenas', 'Instituto Oceanográfico', '2023-05-12'),
-                                                                                                        ('Glaciares Andinos', 'Monitoreo de masas de hielo en la cordillera', 'Centro Glaciológico', '2023-06-18');
-
--- Poblar tabla de mediciones
-INSERT INTO measurements (value_measurement, date_measurement, id_measure_points, id_dataset) VALUES
-                                                                                                  (25.4, '2023-06-15 14:30:00+00', 1, 1),    -- Temperatura para Clima Santiago
-                                                                                                  (452.8, '2023-06-15 15:00:00+00', 2, 4),   -- Emisiones de CO2 para Monitoreo CO2
-                                                                                                  (3.25, '2023-06-15 15:30:00+00', 3, 5),    -- Nivel del mar para Niveles Oceánicos
-                                                                                                  (12500.5, '2023-06-16 10:15:00+00', 4, 6), -- Masa de hielo para Glaciares
-                                                                                                  (26.7, '2023-06-16 12:00:00+00', 5, 1),    -- Temperatura para Clima Santiago
-                                                                                                  (468.2, '2023-06-17 13:45:00+00', 6, 4),   -- Emisiones de CO2 para Monitoreo CO2
-                                                                                                  (3.34, '2023-06-17 14:30:00+00', 7, 5),    -- Nivel del mar para Niveles Oceánicos
-                                                                                                  (12350.8, '2023-07-10 09:15:00+00', 8, 6), -- Masa de hielo para Glaciares
-                                                                                                  (28.9, '2023-07-10 10:30:00+00', 9, 1),    -- Temperatura
-                                                                                                  (475.6, '2023-07-11 11:45:00+00', 10, 4),  -- Emisiones de CO2
-                                                                                                  (3.45, '2023-07-12 13:00:00+00', 11, 5),   -- Nivel del mar
-                                                                                                  (12100.2, '2023-07-13 14:15:00+00', 12, 6), -- Masa de hielo
-                                                                                                  (24.3, '2023-07-14 15:30:00+00', 13, 1),   -- Temperatura
-                                                                                                  (480.1, '2023-07-15 16:45:00+00', 14, 4),  -- Emisiones de CO2
-                                                                                                  (3.52, '2023-07-16 17:00:00+00', 15, 5),   -- Nivel del mar
-                                                                                                  (11950.7, '2023-07-17 09:30:00+00', 8, 6), -- Masa de hielo
-                                                                                                  (29.5, '2023-07-18 10:45:00+00', 1, 1);    -- Temperatura
-DROP FUNCTION get_aggregated_measurements(bigint,timestamp without time zone,timestamp without time zone)
-
--- Sentencia 6:
-CREATE OR REPLACE FUNCTION get_aggregated_measurements(
-    p_id_dataset BIGINT,
-    p_start_date TIMESTAMP,
-    p_end_date TIMESTAMP
-)
-RETURNS TABLE (
-    period_start DATE,
-    avg_value DOUBLE PRECISION
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    -- Si el rango es menor o igual a 90 días → agrupamos por semana
-    IF (p_end_date - p_start_date) <= INTERVAL '90 days' THEN
-        RETURN QUERY
-    SELECT
-        date_trunc('week', m.date_measurement)::DATE AS period_start,
-        AVG(m.value_measurement) AS avg_value
-    FROM measurements m
-    WHERE m.id_dataset = p_id_dataset
-      AND m.date_measurement BETWEEN p_start_date AND p_end_date
-    GROUP BY date_trunc('week', m.date_measurement)
-    ORDER BY period_start;
-
-    -- Si el rango es mayor a 90 días → agrupamos por mes
-    ELSE
-            RETURN QUERY
-    SELECT
-        date_trunc('month', m.date_measurement)::DATE AS period_start,
-        AVG(m.value_measurement) AS avg_value
-    FROM measurements m
-    WHERE m.id_dataset = p_id_dataset
-      AND m.date_measurement BETWEEN p_start_date AND p_end_date
-    GROUP BY date_trunc('month', m.date_measurement)
-    ORDER BY period_start;
-    END IF;
-END;
-$$;
 ('Juan', 'Pérez', '12345678-9', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'juan.perez@ejemplo.com', 'ROLE_ADMIN'),
 ('María', 'González', '98765432-1', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'maria.gonzalez@ejemplo.com', 'ROLE_USER'),
 ('Carlos', 'Rodríguez', '11111111-1', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'carlos.rodriguez@ejemplo.com', 'ROLE_USER'),
@@ -101,7 +7,7 @@ $$;
 ('Pedro', 'Sánchez', '33333333-3', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'pedro.sanchez@ejemplo.com', 'ROLE_USER'),
 ('Laura', 'Díaz', '44444444-4', '$2a$10$RgltMjiv61gUbaivPGiFmu/SDaamf7kdmtJ/IAxh2pgYn3XBKw7Pu', 'laura.diaz@ejemplo.com', 'ROLE_USER');
 
--- Poblar tabla de puntos de medición (latitud y longitud estan multiplicados por 1,000,000 para evitar decimales)
+-- Poblar tabla de puntos de medición
 INSERT INTO measure_points (latitud, longitud, sensor_type) VALUES
 (-33.456789, -70.123456, 'Temperatura'),
 (-33.456123, -70.124567, 'Emisiones de CO2'),
@@ -117,7 +23,11 @@ INSERT INTO measure_points (latitud, longitud, sensor_type) VALUES
 (-33.446789, -70.134567, 'Masa de hielo'),
 (-33.445678, -70.135678, 'Temperatura'),
 (-33.444567, -70.136789, 'Emisiones de CO2'),
-(-33.443456, -70.137890, 'Nivel del mar');
+(-33.443456, -70.137890, 'Nivel del mar'),
+(NULL, -70.140000, 'Temperatura'),      -- latitud nula
+(-33.440000, NULL, 'Emisiones de CO2'), -- longitud nula
+(0, 0, 'Nivel del mar');
+
 
 -- Poblar tabla de conjuntos de datos
 INSERT INTO dataset (name_dataset, description_dataset, source_dataset, date_authorization_dataset) VALUES
@@ -130,6 +40,87 @@ INSERT INTO dataset (name_dataset, description_dataset, source_dataset, date_aut
 
 -- Poblar tabla de mediciones
 INSERT INTO measurements (value_measurement, date_measurement, id_measure_points, id_dataset) VALUES
+-- Puntos 1 a 5 (Temperatura, Emisiones de CO2, Nivel del mar, Masa de hielo, Temperatura)
+(27.1, '2023-08-01 10:00:00+00', 1, 1),
+(30.2, '2023-09-01 11:00:00+00', 1, 1),
+(26.8, '2024-01-15 09:30:00+00', 1, 1),
+(28.0, '2024-06-10 12:00:00+00', 1, 1),
+
+(455.0, '2023-08-02 10:15:00+00', 2, 4),
+(460.5, '2023-09-02 11:15:00+00', 2, 4),
+(470.2, '2024-01-16 09:45:00+00', 2, 4),
+(465.8, '2024-06-11 12:15:00+00', 2, 4),
+
+(3.30, '2023-08-03 10:30:00+00', 3, 5),
+(3.40, '2023-09-03 11:30:00+00', 3, 5),
+(3.35, '2024-01-17 10:00:00+00', 3, 5),
+(3.50, '2024-06-12 12:30:00+00', 3, 5),
+
+(12600.0, '2023-08-04 10:45:00+00', 4, 6),
+(12450.3, '2023-09-04 11:45:00+00', 4, 6),
+(12550.7, '2024-01-18 10:15:00+00', 4, 6),
+(12480.2, '2024-06-13 12:45:00+00', 4, 6),
+
+(27.0, '2023-08-05 11:00:00+00', 5, 1),
+(25.9, '2023-09-05 12:00:00+00', 5, 1),
+(26.5, '2024-01-19 10:30:00+00', 5, 1),
+(27.3, '2024-06-14 13:00:00+00', 5, 1),
+
+-- Puntos 6 a 10
+(470.0, '2023-08-06 11:15:00+00', 6, 4),
+(472.5, '2023-09-06 12:15:00+00', 6, 4),
+(469.8, '2024-01-20 10:45:00+00', 6, 4),
+(471.2, '2024-06-15 13:15:00+00', 6, 4),
+
+(3.38, '2023-08-07 11:30:00+00', 7, 5),
+(3.41, '2023-09-07 12:30:00+00', 7, 5),
+(3.36, '2024-01-21 11:00:00+00', 7, 5),
+(3.49, '2024-06-16 13:30:00+00', 7, 5),
+
+(12400.5, '2023-08-08 11:45:00+00', 8, 6),
+(12380.2, '2023-09-08 12:45:00+00', 8, 6),
+(12450.1, '2024-01-22 11:15:00+00', 8, 6),
+(12390.7, '2024-06-17 13:45:00+00', 8, 6),
+
+(29.1, '2023-08-09 12:00:00+00', 9, 1),
+(28.7, '2023-09-09 13:00:00+00', 9, 1),
+(29.3, '2024-01-23 11:30:00+00', 9, 1),
+(28.8, '2024-06-18 14:00:00+00', 9, 1),
+
+(480.0, '2023-08-10 12:15:00+00', 10, 4),
+(478.5, '2023-09-10 13:15:00+00', 10, 4),
+(479.2, '2024-01-24 11:45:00+00', 10, 4),
+(481.1, '2024-06-19 14:15:00+00', 10, 4),
+
+-- Puntos 11 a 15
+(3.47, '2023-08-11 12:30:00+00', 11, 5),
+(3.44, '2023-09-11 13:30:00+00', 11, 5),
+(3.51, '2024-01-25 12:00:00+00', 11, 5),
+(3.48, '2024-06-20 14:30:00+00', 11, 5),
+
+(12200.2, '2023-08-12 12:45:00+00', 12, 6),
+(12050.8, '2023-09-12 13:45:00+00', 12, 6),
+(12150.3, '2024-01-26 12:15:00+00', 12, 6),
+(12080.9, '2024-06-21 14:45:00+00', 12, 6),
+
+(25.1, '2023-08-13 13:00:00+00', 13, 1),
+(24.7, '2023-09-13 14:00:00+00', 13, 1),
+(25.3, '2024-01-27 12:30:00+00', 13, 1),
+(24.8, '2024-06-22 15:00:00+00', 13, 1),
+
+(485.0, '2023-08-14 13:15:00+00', 14, 4),
+(482.5, '2023-09-14 14:15:00+00', 14, 4),
+(483.2, '2024-01-28 12:45:00+00', 14, 4),
+(481.9, '2024-06-23 15:15:00+00', 14, 4),
+
+(3.55, '2023-08-15 13:30:00+00', 15, 5),
+(3.53, '2023-09-15 14:30:00+00', 15, 5),
+(3.57, '2024-01-29 13:00:00+00', 15, 5),
+(3.54, '2024-06-24 15:30:00+00', 15, 5),
+
+(25.0, '2024-07-01 10:00:00+00', 16, 1),
+(450.0, '2024-07-02 11:00:00+00', 17, 4),
+(3.20, '2024-07-03 12:00:00+00', 18, 5),
 (25.4, '2023-06-15 14:30:00+00', 1, 1),    -- Temperatura para Clima Santiago
 (452.8, '2023-06-15 15:00:00+00', 2, 4),   -- Emisiones de CO2 para Monitoreo CO2
 (3.25, '2023-06-15 15:30:00+00', 3, 5),    -- Nivel del mar para Niveles Oceánicos
@@ -224,3 +215,194 @@ INSERT INTO measurements (value_measurement, date_measurement, id_measure_points
 -- Punto 15 - Nivel del mar
 (3.55, '2025-01-25 10:00:00+00', 15, 5),
 (3.60, '2025-06-18 12:45:00+00', 15, 5);
+
+
+-- Sentencia 6:
+CREATE OR REPLACE FUNCTION get_aggregated_measurements(
+    p_id_dataset BIGINT,
+    p_start_date TIMESTAMP,
+    p_end_date TIMESTAMP
+)
+RETURNS TABLE (
+    period_start DATE,
+    avg_value DOUBLE PRECISION
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Si el rango es menor o igual a 90 días → agrupamos por semana
+    IF (p_end_date - p_start_date) <= INTERVAL '90 days' THEN
+        RETURN QUERY
+SELECT
+    date_trunc('week', m.date_measurement)::DATE AS period_start,
+    AVG(m.value_measurement) AS avg_value
+FROM measurements m
+WHERE m.id_dataset = p_id_dataset
+  AND m.date_measurement BETWEEN p_start_date AND p_end_date
+GROUP BY date_trunc('week', m.date_measurement)
+ORDER BY period_start;
+
+-- Si el rango es mayor a 90 días → agrupamos por mes
+ELSE
+            RETURN QUERY
+SELECT
+    date_trunc('month', m.date_measurement)::DATE AS period_start,
+    AVG(m.value_measurement) AS avg_value
+FROM measurements m
+WHERE m.id_dataset = p_id_dataset
+  AND m.date_measurement BETWEEN p_start_date AND p_end_date
+GROUP BY date_trunc('month', m.date_measurement)
+ORDER BY period_start;
+END IF;
+END;
+$$;
+
+/*  CONSULTA 1:
+ Cálculo de Anomalía de Temperatura: Escribe una consulta SQL que,
+para cada punto de medición, calcule la temperatura promedio del último
+año y la compare con el promedio histórico de ese mismo punto. Muestra el
+ID del punto de medición y la diferencia (anomalía) en grados.
+ */
+
+
+-- TRIGGER FUNCION
+CREATE OR REPLACE FUNCTION calcular_anomalia_punto()
+    RETURNS TRIGGER AS $$
+DECLARE
+promedio_historico DOUBLE PRECISION;
+    promedio_ultimo_anio DOUBLE PRECISION;
+    anomalia DOUBLE PRECISION;
+BEGIN
+    -- Calcular promedio histórico del punto
+SELECT AVG(value_measurement)
+INTO promedio_historico
+FROM measurements
+WHERE id_measure_points = NEW.id_measure_points;
+
+-- Calcular promedio del último año del punto
+SELECT AVG(value_measurement)
+INTO promedio_ultimo_anio
+FROM measurements
+WHERE id_measure_points = NEW.id_measure_points
+  AND date_measurement >= CURRENT_DATE - INTERVAL '1 year';
+
+-- Calcular anomalía
+anomalia := promedio_ultimo_anio - promedio_historico;
+
+    -- Mostrar el resultado en consola (no se guarda)
+    RAISE NOTICE 'Punto % -> Anomalía: %',
+        NEW.id_measure_points, anomalia;
+
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- TRIGGER
+CREATE TRIGGER trg_calcular_anomalia_punto
+    AFTER INSERT OR UPDATE
+                        ON measurements
+                        FOR EACH ROW
+                        EXECUTE FUNCTION calcular_anomalia_punto();
+
+-- INDEX BY DATE
+CREATE INDEX idx_measurements_date
+    ON measurements (date_measurement);
+
+/* CONSULTA 5:
+  Simulación de Interpolación de Datos: Escribe un procedimiento
+almacenado llamado interpolar_datos_semanales que reciba un ID
+de dataset. El procedimiento debe calcular el promedio semanal de las
+mediciones y almacenarlo en una tabla de resumen, llenando los días sin
+datos con el promedio semanal.
+ */
+
+CREATE OR REPLACE FUNCTION interpolar_datos_semanales(p_id_dataset BIGINT)
+    RETURNS TABLE(
+                     id_measure_points BIGINT,
+                     week_start DATE,
+                     week_end DATE,
+                     avg_value DOUBLE PRECISION
+                 ) AS $$
+DECLARE
+rec RECORD;
+    semana_inicio DATE;
+    semana_fin DATE;
+    rango_inicio DATE;
+    rango_fin DATE;
+    avg_semana DOUBLE PRECISION;
+    dias_con_datos INT;
+    dias_sin_datos INT;
+BEGIN
+    -- Iterar por cada punto de medición del dataset
+FOR rec IN
+SELECT DISTINCT m.id_measure_points
+FROM measurements m
+WHERE m.id_dataset = p_id_dataset
+    LOOP
+-- Rango total de fechas del dataset para este punto
+SELECT MIN(m.date_measurement)::date, MAX(m.date_measurement)::date
+INTO rango_inicio, rango_fin
+FROM measurements m
+WHERE m.id_measure_points = rec.id_measure_points
+  AND m.id_dataset = p_id_dataset;
+
+semana_inicio := rango_inicio;
+
+            -- Recorremos las semanas dentro del rango
+            WHILE semana_inicio <= rango_fin LOOP
+                    semana_fin := semana_inicio + INTERVAL '6 days';
+
+                    -- Promedio de la semana (solo días con datos)
+SELECT AVG(m.value_measurement), COUNT(DISTINCT m.date_measurement::date)
+INTO avg_semana, dias_con_datos
+FROM measurements m
+WHERE m.id_measure_points = rec.id_measure_points
+  AND m.id_dataset = p_id_dataset
+  AND m.date_measurement::date BETWEEN semana_inicio AND semana_fin;
+
+-- Si no hay datos en esa semana, asignamos 0
+IF avg_semana IS NULL THEN
+                        avg_semana := 0;
+                        dias_con_datos := 0;
+END IF;
+
+                    -- Días sin datos
+                    dias_sin_datos := 7 - dias_con_datos;
+
+                    -- Interpolación: los días sin datos cuentan con el promedio semanal
+                    -- (el promedio de la semana sigue siendo el mismo)
+                    avg_semana := avg_semana;
+
+                    -- Retornar fila
+                    id_measure_points := rec.id_measure_points;
+                    week_start := semana_inicio;
+                    week_end := semana_fin;
+                    avg_value := avg_semana;
+
+                    RETURN NEXT;
+
+                    -- Avanzar a la siguiente semana
+                    semana_inicio := semana_inicio + INTERVAL '7 days';
+END LOOP;
+END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+   -- Creación de la vista materializada
+CREATE MATERIALIZED VIEW tendencia_mensual AS
+SELECT
+    mp.sensor_type,
+    EXTRACT(YEAR FROM m.date_measurement) AS year,
+  EXTRACT(MONTH FROM m.date_measurement) AS month,
+  AVG(m.value_measurement) AS average
+FROM measurements m
+    JOIN dataset d ON m.id_dataset = d.id_dataset
+    JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
+GROUP BY mp.sensor_type, year, month
+ORDER BY year, month;
+
+-- Indexación para refrescar
+CREATE UNIQUE INDEX idx_tendencia_mensual_unique
+    ON tendencia_mensual (sensor_type, year, month);

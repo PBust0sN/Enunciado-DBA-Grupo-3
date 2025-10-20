@@ -1,9 +1,12 @@
 <script>
-import { defineComponent } from 'vue';
 import Sidebar from '@/components/Sidebar.vue';
-export default defineComponent({
-  name: 'MapView',
-});
+
+const handlePointsFetch = async () => {
+    const response = await api.get("/api/v1/measurePoints/getAll");
+    return response.data;
+
+}
+
 </script>
 
 <template>

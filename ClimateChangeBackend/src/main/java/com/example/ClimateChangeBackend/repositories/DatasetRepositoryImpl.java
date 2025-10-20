@@ -126,6 +126,15 @@ public class DatasetRepositoryImpl implements DatasetRepository {
                         TSMeasureDTO dto = new TSMeasureDTO();
                         dto.setAvgValue(rs.getDouble("avg_value"));
                         dto.setPeriodStart(rs.getDate("period_start"));
+                        return dto;
+                    }
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
     @Override
     public List<InterpolarDatosSemDTO> interpolar_datos_semanales(Long id_dataset) {
         String sql = """

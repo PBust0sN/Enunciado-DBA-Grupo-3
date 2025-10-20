@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/measurePoints")
 public class MeasurePointsController {
     private MeasurePointsService  measurePointsService;
-
+    
     @GetMapping("/get/{id}")
     public ResponseEntity<Optional<MeasurePointsEntity>> findById(@PathVariable("id") Long id){
         Optional<MeasurePointsEntity>  measurePointsEntity = measurePointsService.findById(id);
@@ -46,6 +46,18 @@ public class MeasurePointsController {
             return ResponseEntity.ok().body(measurePointRequest);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/pointsWithHighestVariation")
+    public ResponseEntity<List<?>> getPointsWithHighestVariation() {
+        List<?> pointsWithHighestVariation = measurePointsService.findPointsWithHighestVariation();
+        return ResponseEntity.ok().body(pointsWithHighestVariation);
+    }
+
+    @GetMapping("/pointsWithoutGeoreference")
+    public ResponseEntity<List<?>> getPointsWithoutGeoreference() {
+        List<?> pointsWithoutGeoreference = measurePointsService.findPointsWithoutGeoreference();
+        return ResponseEntity.ok().body(pointsWithoutGeoreference);
     }
 
     @GetMapping("/getByLatLon/{lat}{lon}")
