@@ -9,24 +9,24 @@ INSERT INTO users (first_name, last_name, rut, password, email, role) VALUES
 
 -- Poblar tabla de puntos de medición
 INSERT INTO measure_points (latitud, longitud, sensor_type) VALUES
-                                                                (-33.456789, -70.123456, 'Temperatura'),
-                                                                (-33.456123, -70.124567, 'Emisiones de CO2'),
-                                                                (-33.612125, -71.632559, 'Nivel del mar'),
-                                                                (-33.454321, -70.126789, 'Masa de hielo'),
-                                                                (-33.453456, -70.127890, 'Temperatura'),
-                                                                (-33.452345, -70.128901, 'Emisiones de CO2'),
-                                                                (-33.451234, -70.129012, 'Nivel del mar'),
-                                                                (-33.450123, -70.130123, 'Masa de hielo'),
-                                                                (-33.449012, -70.131234, 'Temperatura'),
-                                                                (-33.448901, -70.132345, 'Emisiones de CO2'),
-                                                                (-33.447890, -70.133456, 'Nivel del mar'),
-                                                                (-33.446789, -70.134567, 'Masa de hielo'),
-                                                                (-33.445678, -70.135678, 'Temperatura'),
-                                                                (-33.444567, -70.136789, 'Emisiones de CO2'),
-                                                                (-33.443456, -70.137890, 'Nivel del mar'),
-                                                                (NULL, -70.140000, 'Temperatura'),      -- latitud nula
-                                                                (-33.440000, NULL, 'Emisiones de CO2'), -- longitud nula
-                                                                (0, 0, 'Nivel del mar');
+(-33.456789, -70.123456, 'Temperatura'),
+(-33.456123, -70.124567, 'Emisiones de CO2'),
+(-33.612125, -71.632559, 'Nivel del mar'),
+(-33.454321, -70.126789, 'Masa de hielo'),
+(-33.453456, -70.127890, 'Temperatura'),
+(-33.452345, -70.128901, 'Emisiones de CO2'),
+(-33.451234, -70.129012, 'Nivel del mar'),
+(-33.450123, -70.130123, 'Masa de hielo'),
+(-33.449012, -70.131234, 'Temperatura'),
+(-33.448901, -70.132345, 'Emisiones de CO2'),
+(-33.447890, -70.133456, 'Nivel del mar'),
+(-33.446789, -70.134567, 'Masa de hielo'),
+(-33.445678, -70.135678, 'Temperatura'),
+(-33.444567, -70.136789, 'Emisiones de CO2'),
+(-33.443456, -70.137890, 'Nivel del mar'),
+(NULL, -70.140000, 'Temperatura'),      -- latitud nula
+(-33.440000, NULL, 'Emisiones de CO2'), -- longitud nula
+(0, 0, 'Nivel del mar');
 
 
 -- Poblar tabla de conjuntos de datos
@@ -120,7 +120,7 @@ INSERT INTO measurements (value_measurement, date_measurement, id_measure_points
 
 (25.0, '2024-07-01 10:00:00+00', 16, 1),
 (450.0, '2024-07-02 11:00:00+00', 17, 4),
-(3.20, '2024-07-03 12:00:00+00', 18, 5);
+(3.20, '2024-07-03 12:00:00+00', 18, 5),
 (25.4, '2023-06-15 14:30:00+00', 1, 1),    -- Temperatura para Clima Santiago
 (452.8, '2023-06-15 15:00:00+00', 2, 4),   -- Emisiones de CO2 para Monitoreo CO2
 (3.25, '2023-06-15 15:30:00+00', 3, 5),    -- Nivel del mar para Niveles Oceánicos
@@ -389,3 +389,22 @@ END LOOP;
 END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+   -- Creación de la vista materializada
+CREATE MATERIALIZED VIEW tendencia_mensual AS
+SELECT
+    mp.sensor_type,
+    EXTRACT(YEAR FROM m.date_measurement) AS year,
+  EXTRACT(MONTH FROM m.date_measurement) AS month,
+  AVG(m.value_measurement) AS average
+FROM measurements m
+    JOIN dataset d ON m.id_dataset = d.id_dataset
+    JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
+GROUP BY mp.sensor_type, year, month
+ORDER BY year, month;
+
+-- Indexación para refrescar
+CREATE UNIQUE INDEX idx_tendencia_mensual_unique
+    ON tendencia_mensual (sensor_type, year, month);

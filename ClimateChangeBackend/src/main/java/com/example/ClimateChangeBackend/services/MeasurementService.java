@@ -37,6 +37,8 @@ public class MeasurementService {
 
     public List<Map<String, Object>> extremeEventDetection() {
         return measurementRepository.extremeEventDetection();
+    }
+
     public List<AnomaliaDTO> tempetureAnomalyCalculation(){
         return measurementRepository.tempetureAnomalyCalculation();
     }

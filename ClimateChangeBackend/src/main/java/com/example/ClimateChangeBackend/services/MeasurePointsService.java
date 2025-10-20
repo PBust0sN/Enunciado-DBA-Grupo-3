@@ -22,8 +22,6 @@ public class MeasurePointsService {
         return measurePointsRepository.findById(id);
     }
 
-    public List<Optional<MeasurePointsEntity>> findAll() {
-        return measurePointsRepository.findAll();
     public List<MeasurePointsEntity> findAll(){
         return   measurePointsRepository.findAll();
     }
@@ -68,6 +66,8 @@ public class MeasurePointsService {
         } catch (Exception e) {
             throw new RuntimeException("Error retrieving points without georeference", e);
         }
+    }
+
     public Optional<MeasurePointsEntity> getMeasurePointByLatitudAndLongitud(double latitud, double longitud) {
         return measurePointsRepository.findByLatitudeAndLongitude(latitud, longitud);
     }

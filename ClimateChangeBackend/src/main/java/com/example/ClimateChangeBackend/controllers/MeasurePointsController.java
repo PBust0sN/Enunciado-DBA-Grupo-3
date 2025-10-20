@@ -58,6 +58,8 @@ public class MeasurePointsController {
     public ResponseEntity<List<?>> getPointsWithoutGeoreference() {
         List<?> pointsWithoutGeoreference = measurePointsService.findPointsWithoutGeoreference();
         return ResponseEntity.ok().body(pointsWithoutGeoreference);
+    }
+
     @GetMapping("/getByLatLon/{lat}{lon}")
     public ResponseEntity<MeasurePointsEntity> getByLatLon(@PathVariable("lat") double lat,  @PathVariable("lon") double lon){
         Optional<MeasurePointsEntity> point = measurePointsService.getMeasurePointByLatitudAndLongitud(lat,lon);

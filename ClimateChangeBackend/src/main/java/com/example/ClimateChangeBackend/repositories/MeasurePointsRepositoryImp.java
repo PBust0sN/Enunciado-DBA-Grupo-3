@@ -133,6 +133,8 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                         .lastMeasurementDate(rs.getObject("last_measurement_date", java.time.OffsetDateTime.class))
                         .build()
         );
+    }
+
     public Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon){
         String sql = "SELECT id_measure_points, latitud, longitud, sensor_type FROM measure_points WHERE latitud = ? AND longitud = ?";
         try {
