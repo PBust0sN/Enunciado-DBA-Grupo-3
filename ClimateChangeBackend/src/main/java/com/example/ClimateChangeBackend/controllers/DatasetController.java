@@ -39,7 +39,7 @@ public class DatasetController {
         return ResponseEntity.ok().body(new MessageResponse("Dataset created successfully",true));
     }
 
-    @GetMapping("/getById/{idDataset}")
+        @GetMapping("/getById/{idDataset}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
     public ResponseEntity<?> getById(@PathVariable Long idDataset) {
         DatasetEntity dataset = datasetService.getDatasetById(idDataset);

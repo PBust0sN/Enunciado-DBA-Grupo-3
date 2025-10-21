@@ -30,6 +30,15 @@ const items = [
   { title: 'Cerrar Sesión', icon: 'mdi-logout', action: logout, show: computed(() => isLoggedIn.value) },
 ]
 
+const menuItems = [
+        /*This is just for adjusting the list*/ 
+        { label: 'Home', to: '/' },
+        { label: 'Filtrar Datasets', to: '/data' },
+        { label: 'Mapa', to: '/map' },
+        { label: 'Consultas', to: '/consults'}
+]
+
+
 const filteredItems = computed(() => {
   return items.filter(item => !item.show || item.show.value)
 })
@@ -51,8 +60,22 @@ const filteredItems = computed(() => {
           Cambio Climático
         </v-app-bar-title>
       </div>
+      <v-spacer >
+            <div class="d-flex justify-center align-center">
+              <v-btn
+                v-for="(item, index) in menuItems"  
+                :key="index"
+                :to="item.to"
+                color="primary"
+                variant="tonal"
+                class="mx-2"
+              >
+                {{ item.label }}
+              </v-btn>
+            </div>
+      </v-spacer>
 
-      <v-spacer></v-spacer>
+
 
       <div class="d-none d-md-flex">
         <v-btn 

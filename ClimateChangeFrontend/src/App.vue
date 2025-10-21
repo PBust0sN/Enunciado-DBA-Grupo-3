@@ -13,7 +13,7 @@ const userName = first_name && last_name ? `${first_name} ${last_name}` : 'Invit
 <template>
   <v-app>
     <HeaderComponent :user-name="userName" />
-    <Sidebar />
+
     <v-main>
       <v-container class="pa-0" fluid>
         <RouterView />

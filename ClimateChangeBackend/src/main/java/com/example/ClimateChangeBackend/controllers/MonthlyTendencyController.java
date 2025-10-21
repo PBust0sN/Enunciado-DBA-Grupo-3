@@ -21,6 +21,7 @@ public class MonthlyTendencyController {
 
     @GetMapping
     public List<MonthlyTendencyEntity> getAll() {
+
         return service.getMonthlyTendencies();
     }
 
