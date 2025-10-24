@@ -24,7 +24,6 @@ const logout = async () => {
 }
 
 const items = [
-  { title: 'Inicio', icon: 'mdi-home', to: '/' },
   { title: 'Iniciar Sesión', icon: 'mdi-login', to: '/login', show: computed(() => !isLoggedIn.value) },
   { title: 'Registrarse', icon: 'mdi-account-plus', to: '/register', show: computed(() => !isLoggedIn.value) },
   { title: 'Cerrar Sesión', icon: 'mdi-logout', action: logout, show: computed(() => isLoggedIn.value) },

@@ -16,6 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @RestController
 @RequestMapping("/api/v1/measurePoints")
+@CrossOrigin("*")
 public class    MeasurePointsController {
     private MeasurePointsService  measurePointsService;
     

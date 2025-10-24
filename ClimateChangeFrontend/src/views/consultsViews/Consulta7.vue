@@ -6,7 +6,7 @@ const list = ref([]);
 
 const fetchData = async () => {
   try {
-    const response = await measurePointsService.getPointsWithHighestVariation();
+    const response = await measurePointsService.getPointsWithoutGeoreference();
     list.value = response.data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -21,16 +21,16 @@ fetchData();
   <v-container>
     <v-card elevation="2" class="pa-4">
       <v-card-title class="text-h6 font-weight-bold">
-        2. Identificación de Puntos con Mayor Variación
-      </v-card-title>
-      <v-card-text>
-        Muestra los 10 puntos con mayor desviación estándar en los valores de temperatura de los últimos 5 años.
-      </v-card-text>
+            7. Listado de Medidas sin Georreferenciación
+        </v-card-title>
+        <v-card-text>
+            Muestra todos los puntos de medicion que no tienen una ubicación geográfica válida y la fecha de su última medición.
+        </v-card-text>
 
       <v-data-table
         :headers="[
           { title: 'ID Punto', key: 'idMeasurePoints' },
-          { title: 'Valor desviación estándar', key: 'temperatureStddev' }
+          { title: 'Fecha última medición', key: 'lastMeasurementDate' }
         ]"
         :items="list"
         class="elevation-1"

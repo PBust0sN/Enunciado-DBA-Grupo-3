@@ -17,6 +17,7 @@ import java.util.Optional;
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @RestController
 @RequestMapping("/api/v1/measurements")
+@CrossOrigin("*")
 public class MeasurementController {
 
     private MeasurementService measurementService;
@@ -27,7 +28,9 @@ public class MeasurementController {
         return measurement.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     @GetMapping("/extreme")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
     public List<Map<String, Object>> extremeEventDetection() {
         return measurementService.extremeEventDetection();
     }
@@ -62,6 +65,9 @@ public class MeasurementController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
     public ResponseEntity<List<AnomaliaDTO>> calculateAnomalia(){
         List<AnomaliaDTO> anomaliaDTO = measurementService.tempetureAnomalyCalculation();
+        if(anomaliaDTO == null || anomaliaDTO.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok().body(anomaliaDTO);
     }
 }

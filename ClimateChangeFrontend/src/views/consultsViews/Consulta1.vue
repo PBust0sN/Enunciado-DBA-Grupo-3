@@ -1,38 +1,42 @@
-<script>
+<script setup>
 import measurementService from '@/services/measurement.service';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+
 const list = ref([]);
 
-try {
+onMounted(async () => {
+  try {
     const response = await measurementService.getAnomaly();
     console.log('Anomaly Data:', response.data);
-    // Aquí puedes manejar los datos recibidos, por ejemplo, asignarlos a una variable de estado
     list.value = response.data;
-} catch (error) {
+  } catch (error) {
     console.error('Error fetching Anomaly data:', error);
-}
-
-
+  }
+});
 </script>
 
 <template>
   <v-container>
     <v-card elevation="2" class="pa-4">
       <v-card-title class="text-h6 font-weight-bold">
-        Data Table
+        1. Cálculo de Anomalía de Temperatura
       </v-card-title>
+      <v-card-text>
+        Muestra para todos los puntos, la diferencia (anomalía) entre la temperatura promedio del ultimo año con su promedio historico.
+      </v-card-text>
 
       <v-data-table
         :headers="[
-          { title: 'ID', key: 'id' },
-          { title: 'Value', key: 'value' }
+          { title: 'ID Measure Points', key: 'id_measure_points' },
+          { title: 'Anomalía', key: 'anomalia' }
         ]"
         :items="list"
         class="elevation-1"
         density="comfortable"
       >
-        <template v-slot:item.value="{ item }">
-          {{ item.value.toFixed(2) }}
+        <!-- handle null values safely -->
+        <template v-slot:item.anomalia="{ item }">
+          {{ item.anomalia !== null ? item.anomalia.toFixed(2) : '—' }}
         </template>
       </v-data-table>
     </v-card>
@@ -40,5 +44,4 @@ try {
 </template>
 
 <style scoped>
-
 </style>

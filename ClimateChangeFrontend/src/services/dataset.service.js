@@ -1,6 +1,6 @@
 import api from './http-common'
 
-const basePath = '/datasets'
+const basePath = '/dataset'
 
 const getAllDatasets = () => {
     return api.get(`${basePath}/get-all-datasets`)
