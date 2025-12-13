@@ -31,7 +31,7 @@ const items = [
 const menuItems = [
         /*This is just for adjusting the list*/ 
         { label: 'Home', to: '/',  },
-        { label: 'Filtrar Datasets', to: '/data', show: computed(() => isLoggedIn.value)},
+        //{ label: 'Filtrar Datasets', to: '/data', show: computed(() => isLoggedIn.value)},
         { label: 'Mapa', to: '/map', show: computed(() => isLoggedIn.value)},
         { label: 'Consultas', to: '/consults', show: computed(() => isLoggedIn.value)}
 ]
