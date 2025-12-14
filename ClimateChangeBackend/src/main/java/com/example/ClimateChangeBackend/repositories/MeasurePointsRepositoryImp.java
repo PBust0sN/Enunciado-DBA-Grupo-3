@@ -66,8 +66,8 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                                 sql,
                                 new String[] { "idMeasurePoints" }
                         );
-                        ps.setLong(1, measurePointsEntity.getLatitud());
-                        ps.setLong(2, measurePointsEntity.getLongitud());
+                        ps.setDouble(1, measurePointsEntity.getLatitud());
+                        ps.setDouble(2, measurePointsEntity.getLongitud());
                         ps.setString(3, measurePointsEntity.getSensorType());
                         return ps;
                     },
@@ -99,12 +99,13 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                 measurePointsEntity.getIdMeasurePoints());
     }
 
+    // Consulta 2
     @Override
     public List<PointVariationDTO> findPointsWithHighestVariation(){
         String sql = "SELECT mp.id_measure_points, STDDEV(m.value_measurement) AS temperature_stddev " +
                 "FROM measure_points mp " +
                 "JOIN measurements m ON mp.id_measure_points = m.id_measure_points " +
-                "WHERE m.date_measurement >= NOW() - INTERVAL '5 years' " +
+                "WHERE m.date_measurement >= NOW() - INTERVAL '5 years' AND mp.sensor_type = 'Temperatura'" +
                 "GROUP BY mp.id_measure_points " +
                 "HAVING COUNT(m.id_measurement) > 1 " +
                 "ORDER BY temperature_stddev DESC " +
@@ -135,14 +136,15 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
         );
     }
 
-    public Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon){
-        String sql = "SELECT id_measure_points, latitud, longitud, sensor_type FROM measure_points WHERE latitud = ? AND longitud = ?";
+    public Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon, String type){
+        String sql = "SELECT id_measure_points, latitud, longitud, sensor_type FROM measure_points WHERE latitud = ? AND longitud = ? AND sensor_type = ? LIMIT 1";
         try {
             MeasurePointsEntity measurePointsEntity = jdbcTemplate.queryForObject(
                     sql,
                     new BeanPropertyRowMapper<>(MeasurePointsEntity.class),
                     lat,
-                    lon
+                    lon,
+                    type
             );
             return Optional.ofNullable(measurePointsEntity);
         } catch (EmptyResultDataAccessException e) {
@@ -150,6 +152,7 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
         }
     }
 
+    // Consulta 3
     @Override
     public List<MeasurePointsEntity> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude){
         String sql = """ 

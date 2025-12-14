@@ -26,8 +26,8 @@ const getPointsWithoutGeoreference = () => {
     return api.get(`${basePath}/pointsWithoutGeoreference`)
 }
 
-const getByLatLon = (lat, lon) => {
-    return api.get(`${basePath}/getByLatLon/${lat}/${lon}`)
+const getByLatLon = (lat, lon, type) => {
+    return api.get(`${basePath}/getByLatLon/${lat}/${lon}/${type}`)
 }
 
 const getLessThan50 = (lat, lon) =>{

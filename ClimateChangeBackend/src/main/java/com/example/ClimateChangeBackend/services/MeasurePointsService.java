@@ -44,6 +44,7 @@ public class MeasurePointsService {
         return measurePointsRepository.update(measurePointsEntity);
     }
 
+    // Consulta 2
     public List<PointVariationDTO> findPointsWithHighestVariation() {
         try {
             List<PointVariationDTO> pointsWithHighestVariation = measurePointsRepository.findPointsWithHighestVariation();
@@ -68,14 +69,15 @@ public class MeasurePointsService {
         }
     }
 
-    public Optional<MeasurePointsEntity> getMeasurePointByLatitudAndLongitud(double latitud, double longitud) {
-        return measurePointsRepository.findByLatitudeAndLongitude(latitud, longitud);
+    public Optional<MeasurePointsEntity> getMeasurePointByLatitudAndLongitud(double latitud, double longitud, String type) {
+        return measurePointsRepository.findByLatitudeAndLongitude(latitud, longitud, type);
     }
 
+    // Consulta 3
     public List<MeasurePointsEntity> getPointsLessThan50(double lat, double lon) {
-        MeasurePointsEntity point = measurePointsRepository.findByLatitudeAndLongitude(lat,lon)
+        MeasurePointsEntity point = measurePointsRepository.findByLatitudeAndLongitude(lat,lon, "Temperatura")
                 .orElseThrow(() -> new RuntimeException("No se encontró el punto con esas coordenadas"));
-        if (point.getSensorType().equals("Temperatura")){
+        if (!point.getSensorType().equals("Temperatura")){
             new RuntimeException("Este no es un punto de Temperatura");
         }
         return measurePointsRepository.getPointsLessThan50ByLatitudeAndLongitude(lat, lon);
