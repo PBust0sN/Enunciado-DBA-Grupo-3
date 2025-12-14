@@ -14,7 +14,7 @@ public interface MeasurePointsRepository {
     int update(MeasurePointsEntity  measurePointsEntity);
     List<PointVariationDTO> findPointsWithHighestVariation();
     List<PointWithoutGeorefDTO> findPointsWithoutGeoreference();
-    Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon);
+    Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon, String type);
 
     List<MeasurePointsEntity> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude);
 }

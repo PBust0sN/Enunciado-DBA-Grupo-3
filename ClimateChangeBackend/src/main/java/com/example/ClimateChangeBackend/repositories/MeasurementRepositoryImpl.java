@@ -56,6 +56,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
         return jdbcTemplate.update(sql, id);
     }
 
+    // Consulta 4
     @Override
     public List<Map<String, Object>> extremeEventDetection() {
         String sql = """
@@ -80,6 +81,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
         return jdbcTemplate.queryForList(sql);
     }
 
+    // Consulta 1
     @Override
     public List<AnomaliaDTO> tempetureAnomalyCalculation(){
         String sql = """

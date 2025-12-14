@@ -61,9 +61,9 @@ public class    MeasurePointsController {
         return ResponseEntity.ok().body(pointsWithoutGeoreference);
     }
 
-    @GetMapping("/getByLatLon/{lat}/{lon}")
-    public ResponseEntity<MeasurePointsEntity> getByLatLon(@PathVariable("lat") double lat,  @PathVariable("lon") double lon){
-        Optional<MeasurePointsEntity> point = measurePointsService.getMeasurePointByLatitudAndLongitud(lat,lon);
+    @GetMapping("/getByLatLon/{lat}/{lon}/{type}")
+    public ResponseEntity<MeasurePointsEntity> getByLatLon(@PathVariable("lat") double lat,  @PathVariable("lon") double lon, @PathVariable("type") String type){
+        Optional<MeasurePointsEntity> point = measurePointsService.getMeasurePointByLatitudAndLongitud(lat,lon, type);
         return ResponseEntity.ok().body(point.get());
     }
 
