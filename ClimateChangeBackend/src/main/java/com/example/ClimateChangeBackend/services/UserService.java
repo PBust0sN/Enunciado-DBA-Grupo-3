@@ -31,7 +31,7 @@ public class UserService {
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
                 .email(registerRequest.getEmail())
-                .role(Role.ROLE_EMPLOYEE)
+                .role(Role.ROLE_USER)
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build();
         userRepository.save(userEntity);
