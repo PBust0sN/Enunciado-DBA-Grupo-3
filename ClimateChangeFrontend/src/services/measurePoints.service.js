@@ -30,8 +30,12 @@ const getByLatLon = (lat, lon, type) => {
     return api.get(`${basePath}/getByLatLon/${lat}/${lon}/${type}`)
 }
 
-const getLessThan50 = (lat, lon) =>{
+const getLessThan50 = (lat, lon) => {
     return api.get(`${basePath}/getLessThan50/${lat}/${lon}`)
+}
+
+const getInvalidPoints = () => {
+    return api.get(`${basePath}/getInvalidPoints`)
 }
 
 export default {
@@ -42,5 +46,6 @@ export default {
     getPointsWithHighestVariation,
     getPointsWithoutGeoreference,
     getByLatLon,
-    getLessThan50
+    getLessThan50,
+    getInvalidPoints
 }

@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.services;
 
+import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.MeasurePointRequest;
 import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
 import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
@@ -81,5 +82,10 @@ public class MeasurePointsService {
             new RuntimeException("Este no es un punto de Temperatura");
         }
         return measurePointsRepository.getPointsLessThan50ByLatitudeAndLongitude(lat, lon);
+    }
+
+    // Consulta 4.2 para puntos
+    public List<InvalidPointDTO> getInvalidPoints() {
+        return measurePointsRepository.findInvalidPoints();
     }
 }
