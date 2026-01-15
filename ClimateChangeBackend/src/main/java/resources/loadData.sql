@@ -406,3 +406,45 @@ ORDER BY year, month;
 
 CREATE UNIQUE INDEX idx_tendencia_mensual_unique
     ON tendencia_mensual (id);
+
+-- Actualizaciones enunciado 2
+
+UPDATE measure_points
+SET geom = ST_SetSRID(ST_MakePoint(longitud, latitud), 4326)
+WHERE geom IS NULL
+  AND latitud IS NOT NULL
+  AND longitud IS NOT NULL;
+
+
+INSERT INTO affected_areas (name, area_type, geom)
+VALUES ('Zona Riesgo Santiago', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+     -70.1400 -33.4600,
+     -70.1200 -33.4600,
+     -70.1200 -33.4400,
+     -70.1400 -33.4400,
+     -70.1400 -33.4600
+   ))'), 4326)),
+       ('Zona Riesgo Costa', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+     -71.6400 -33.6200,
+     -71.6200 -33.6200,
+     -71.6200 -33.6000,
+     -71.6400 -33.6000,
+     -71.6400 -33.6200
+   ))'), 4326));
+
+-- Consulta 3. Detección de Puntos en Zonas de Riesgo:
+-- Identificar qué puntos de medición caen dentro de polígonos
+-- definidos como "Zonas de Riesgo Climático" (ST_Intersects).
+SELECT mp.id_measure_points,
+       mp.latitud,
+       mp.longitud,
+       aa.id_area,
+       aa.name AS area_name
+FROM measure_points mp
+         JOIN affected_areas aa
+              ON ST_Intersects(mp.geom, aa.geom)
+WHERE aa.area_type = 'Zonas de Riesgo Climático';
