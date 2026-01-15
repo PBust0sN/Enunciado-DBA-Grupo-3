@@ -393,16 +393,16 @@ $$ LANGUAGE plpgsql;
    -- Creación de la vista materializada
 CREATE MATERIALIZED VIEW tendencia_mensual AS
 SELECT
-    mp.sensor_type,
-    EXTRACT(YEAR FROM m.date_measurement) AS year,
-  EXTRACT(MONTH FROM m.date_measurement) AS month,
-  AVG(m.value_measurement) AS average
+            ROW_NUMBER() OVER (ORDER BY mp.sensor_type, m.date_measurement) AS id,
+            mp.sensor_type,
+            EXTRACT(YEAR FROM m.date_measurement) AS year,
+            EXTRACT(MONTH FROM m.date_measurement) AS month,
+            AVG(m.value_measurement) AS average
 FROM measurements m
-    JOIN dataset d ON m.id_dataset = d.id_dataset
-    JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
-GROUP BY mp.sensor_type, year, month
+         JOIN dataset d ON m.id_dataset = d.id_dataset
+         JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
+GROUP BY mp.sensor_type, year, month, m.date_measurement
 ORDER BY year, month;
 
--- Indexación para refrescar
 CREATE UNIQUE INDEX idx_tendencia_mensual_unique
-    ON tendencia_mensual (sensor_type, year, month);
+    ON tendencia_mensual (id);
