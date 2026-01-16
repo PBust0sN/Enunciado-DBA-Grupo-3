@@ -5,19 +5,14 @@ import com.example.ClimateChangeBackend.dtos.InterpolarDatosSemDTO;
 import com.example.ClimateChangeBackend.dtos.MessageResponse;
 import com.example.ClimateChangeBackend.dtos.TSMeasureDTO;
 import com.example.ClimateChangeBackend.entities.DatasetEntity;
-import com.example.ClimateChangeBackend.security.JwtUtil;
-import com.example.ClimateChangeBackend.security.services.RefreshTokenService;
-import com.example.ClimateChangeBackend.services.Datasetservice;
+import com.example.ClimateChangeBackend.services.DatasetService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,11 +21,7 @@ import java.util.List;
 @RequestMapping("api/v1/dataset")
 public class DatasetController {
 
-    private AuthenticationManager authenticationManager;
-    private Datasetservice datasetService;
-    private RefreshTokenService refreshTokenService;
-    private UserDetailsService userDetailsService;
-    private JwtUtil jwtTokenUtil;
+    private DatasetService datasetService;
 
     @PostMapping("/create-dataset")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
@@ -39,7 +30,7 @@ public class DatasetController {
         return ResponseEntity.ok().body(new MessageResponse("Dataset created successfully",true));
     }
 
-        @GetMapping("/getById/{idDataset}")
+    @GetMapping("/getById/{idDataset}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
     public ResponseEntity<?> getById(@PathVariable Long idDataset) {
         DatasetEntity dataset = datasetService.getDatasetById(idDataset);
@@ -70,6 +61,28 @@ public class DatasetController {
     public ResponseEntity<List<InterpolarDatosSemDTO>> interpolar_datos_semanales(@PathVariable("id") Long id_dataset){
         List<InterpolarDatosSemDTO> datos = datasetService.interpolar_datos_semanales(id_dataset);
         return ResponseEntity.ok().body(datos);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
+    public ResponseEntity<List<DatasetEntity>> getAll() {
+        List<DatasetEntity> datasets = datasetService.getAll();
+        return ResponseEntity.ok(datasets);
+    }
+
+    @PutMapping("/{idDataset}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
+    public ResponseEntity<?> updateDataset(@PathVariable Long idDataset,
+                                           @Valid @RequestBody DatasetRequest datasetRequest) {
+        datasetService.updateDataset(idDataset, datasetRequest);
+        return ResponseEntity.ok(new MessageResponse("Dataset updated successfully", true));
+    }
+
+    @DeleteMapping("/{idDataset}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<?> deleteDataset(@PathVariable Long idDataset) {
+        datasetService.deleteDataset(idDataset);
+        return ResponseEntity.ok(new MessageResponse("Dataset deleted successfully", true));
     }
 }
 

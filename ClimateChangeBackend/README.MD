@@ -8,7 +8,7 @@
     - DB_USER=tu_usuario;
     - JWT_SECRET=tu_secreto_jwt;
 
-        - Para obtener JWT secreto seguro, generar uno [aquí](https://jwtsecrets.com/#generator).
+        - Para obtener JWT secreto seguro, generar uno [aquí](https://jwtsecrets.com/#generator) de 512 bits.
 
 2. Inicializar dbCreate.sql para crear las tablas necesarias en la base de datos PostgreSQL.
     - Ubicación del archivo: `src/main/resources/dbCreate.sql`

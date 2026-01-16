@@ -142,6 +142,68 @@ export default defineComponent({
         </v-card>
       </v-col>
     </v-row>
+    
+    <v-row class="climate-dashboard" dense>
+      <!-- Consulta 1.2 -->
+      <v-col md="3">
+        <v-card class="climate-card">
+          <v-card-title class="multiline-title">
+            1.2. Análisis de Correlación Espacial
+          </v-card-title>
+          <v-card-text>
+            Encontrar puntos de medición de CO2 que estén en un radio de 50km de puntos de medición de temperatura y devolver la distancia.
+          </v-card-text>
+          <v-card-text>
+            <v-btn class="mt-3" color="primary" href="/consults/consulta8">Consultar</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Consulta 2.2 -->
+      <v-col md="3">
+        <v-card class="climate-card">
+          <v-card-title class="multiline-title">
+            2.2. Interpolación (Vecinos)
+          </v-card-title>
+          <v-card-text>
+            Para una ubicación sin sensores, estimar el valor climático promediando los valores de los 3 sensores más cercanos.
+          </v-card-text>
+          <v-card-text>
+            <v-btn class="mt-3" color="primary" href="/consults/consulta8">Consultar</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Consulta 3.2 -->
+      <v-col md="3">
+        <v-card class="climate-card">
+          <v-card-title class="multiline-title">
+            3.2. Detección de Puntos en Zonas de Riesgo
+          </v-card-title>
+          <v-card-text>
+            Identificar qué puntos de medición caen dentro de polígonos definidos como "Zonas de Riesgo Climático".
+          </v-card-text>
+          <v-card-text>
+            <v-btn color="primary" href="/consults/consulta8">Consultar</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Consulta 4.2 -->
+      <v-col md="3">
+        <v-card class="climate-card">
+          <v-card-title class="multiline-title">
+            4.2. Validación de Geometrías
+          </v-card-title>
+          <v-card-text>
+            Consulta para detectar puntos de medición con coordenadas inválidas o geometrías corruptas.
+          </v-card-text>
+          <v-card-text>
+            <v-btn class="mt-8" color="primary" href="/consults/consulta8">Consultar</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

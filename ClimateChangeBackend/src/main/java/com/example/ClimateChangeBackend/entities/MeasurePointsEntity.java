@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.locationtech.jts.geom.Point;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -12,7 +14,8 @@ import lombok.NoArgsConstructor;
 public class MeasurePointsEntity {
 
     private Long idMeasurePoints;
-    private Long latitud;
-    private Long longitud;
+    private double latitud;
+    private double longitud;
+    private Point geom;
     private String sensorType;
 }
