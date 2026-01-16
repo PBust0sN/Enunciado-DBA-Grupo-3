@@ -1,3 +1,4 @@
+CREATE EXTENSION IF NOT EXISTS postgis;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS measure_points(
     id_measure_points SERIAL PRIMARY KEY,
     latitud DOUBLE PRECISION,
     longitud DOUBLE PRECISION,
+    geom geometry(Point, 4326),
     sensor_type VARCHAR(60) NOT NULL
 );
 
@@ -35,4 +37,11 @@ CREATE TABLE IF NOT EXISTS measurements (
     FOREIGN KEY (id_dataset) REFERENCES dataset(id_dataset)
 );
 
+CREATE TABLE IF NOT EXISTS affected_areas
+(
+    id_area   SERIAL PRIMARY KEY,
+    name      VARCHAR(120)            NOT NULL,
+    area_type VARCHAR(80)             NOT NULL,
+    geom      geometry(Polygon, 4326) NOT NULL
+);
 

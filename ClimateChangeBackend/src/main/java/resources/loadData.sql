@@ -393,16 +393,58 @@ $$ LANGUAGE plpgsql;
    -- Creación de la vista materializada
 CREATE MATERIALIZED VIEW tendencia_mensual AS
 SELECT
-    mp.sensor_type,
-    EXTRACT(YEAR FROM m.date_measurement) AS year,
-  EXTRACT(MONTH FROM m.date_measurement) AS month,
-  AVG(m.value_measurement) AS average
+            ROW_NUMBER() OVER (ORDER BY mp.sensor_type, m.date_measurement) AS id,
+            mp.sensor_type,
+            EXTRACT(YEAR FROM m.date_measurement) AS year,
+            EXTRACT(MONTH FROM m.date_measurement) AS month,
+            AVG(m.value_measurement) AS average
 FROM measurements m
-    JOIN dataset d ON m.id_dataset = d.id_dataset
-    JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
-GROUP BY mp.sensor_type, year, month
+         JOIN dataset d ON m.id_dataset = d.id_dataset
+         JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
+GROUP BY mp.sensor_type, year, month, m.date_measurement
 ORDER BY year, month;
 
--- Indexación para refrescar
 CREATE UNIQUE INDEX idx_tendencia_mensual_unique
-    ON tendencia_mensual (sensor_type, year, month);
+    ON tendencia_mensual (id);
+
+-- Actualizaciones enunciado 2
+
+UPDATE measure_points
+SET geom = ST_SetSRID(ST_MakePoint(longitud, latitud), 4326)
+WHERE geom IS NULL
+  AND latitud IS NOT NULL
+  AND longitud IS NOT NULL;
+
+
+INSERT INTO affected_areas (name, area_type, geom)
+VALUES ('Zona Riesgo Santiago', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+     -70.1400 -33.4600,
+     -70.1200 -33.4600,
+     -70.1200 -33.4400,
+     -70.1400 -33.4400,
+     -70.1400 -33.4600
+   ))'), 4326)),
+       ('Zona Riesgo Costa', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+     -71.6400 -33.6200,
+     -71.6200 -33.6200,
+     -71.6200 -33.6000,
+     -71.6400 -33.6000,
+     -71.6400 -33.6200
+   ))'), 4326));
+
+-- Consulta 3. Detección de Puntos en Zonas de Riesgo:
+-- Identificar qué puntos de medición caen dentro de polígonos
+-- definidos como "Zonas de Riesgo Climático" (ST_Intersects).
+SELECT mp.id_measure_points,
+       mp.latitud,
+       mp.longitud,
+       aa.id_area,
+       aa.name AS area_name
+FROM measure_points mp
+         JOIN affected_areas aa
+              ON ST_Intersects(mp.geom, aa.geom)
+WHERE aa.area_type = 'Zonas de Riesgo Climático';

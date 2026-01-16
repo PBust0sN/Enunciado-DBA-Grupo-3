@@ -143,4 +143,16 @@ public class UserRepositoryImpl implements UserRepository {
         return jdbcTemplate.update(sql, userId);
     }
 
+    @Override
+    public java.util.List<UserEntity> findAll() {
+        String sql = "SELECT id, first_name, last_name, rut, password, email, refresh_token, refresh_token_expiration, role FROM users";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserEntity.class));
+    }
+
+    @Override
+    public void delete(UserEntity userEntity) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        jdbcTemplate.update(sql, userEntity.getId());
+    }
+
 }

@@ -7,6 +7,8 @@ import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import com.example.ClimateChangeBackend.repositories.MeasurePointsRepository;
 import lombok.AllArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +20,22 @@ import java.util.Optional;
 public class MeasurePointsService {
 
     private MeasurePointsRepository measurePointsRepository;
+    private GeometryFactory geometryFactory;
 
     public Optional<MeasurePointsEntity> findById(Long id) {
         return measurePointsRepository.findById(id);
     }
 
-    public List<MeasurePointsEntity> findAll(){
-        return   measurePointsRepository.findAll();
+    public List<MeasurePointsEntity> findAll() {
+        return measurePointsRepository.findAll();
     }
 
     public MeasurePointsEntity save(MeasurePointRequest measurePointRequest) {
         MeasurePointsEntity measurePointsEntity = MeasurePointsEntity.builder()
                 .latitud(measurePointRequest.getLatitud())
                 .longitud(measurePointRequest.getLongitud())
+                .geom(geometryFactory.createPoint(
+                        new Coordinate(measurePointRequest.getLongitud(), measurePointRequest.getLatitud())))
                 .sensorType(measurePointRequest.getSensorType())
                 .build();
         return measurePointsRepository.save(measurePointsEntity);
@@ -76,10 +81,10 @@ public class MeasurePointsService {
 
     // Consulta 3
     public List<MeasurePointsEntity> getPointsLessThan50(double lat, double lon) {
-        MeasurePointsEntity point = measurePointsRepository.findByLatitudeAndLongitude(lat,lon, "Temperatura")
+        MeasurePointsEntity point = measurePointsRepository.findByLatitudeAndLongitude(lat, lon, "Temperatura")
                 .orElseThrow(() -> new RuntimeException("No se encontró el punto con esas coordenadas"));
-        if (!point.getSensorType().equals("Temperatura")){
-            new RuntimeException("Este no es un punto de Temperatura");
+        if (!point.getSensorType().equals("Temperatura")) {
+            throw new RuntimeException("Este no es un punto de Temperatura");
         }
         return measurePointsRepository.getPointsLessThan50ByLatitudeAndLongitude(lat, lon);
     }

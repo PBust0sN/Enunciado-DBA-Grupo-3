@@ -28,7 +28,7 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
 
     @Override
     public Optional<MeasurePointsEntity> findById(Long id){
-        String sql = "SELECT idMeasurePoints, Latitud, Longitud, SensorType FROM measure_points WHERE idMeasurePoints = ?";
+        String sql = "SELECT id_measure_points, Latitud, Longitud, sensor_type FROM measure_points WHERE id_measure_points = ?";
         try {
             MeasurePointsEntity measurePointsEntity = jdbcTemplate.queryForObject(
                     sql,
@@ -45,20 +45,19 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
     public List<MeasurePointsEntity> findAll(){
         String sql = "SELECT * FROM measure_points";
         try {
-            List<MeasurePointsEntity> measurePointsEntity = jdbcTemplate.query(
+            return jdbcTemplate.query(
                     sql,
                     new BeanPropertyRowMapper<>(MeasurePointsEntity.class)
             );
-            return measurePointsEntity;
         } catch (EmptyResultDataAccessException e) {
-            return List.of(null);
+            return List.of();
         }
     }
 
     @Override
     public MeasurePointsEntity  save(MeasurePointsEntity measurePointsEntity){
         if (measurePointsEntity.getIdMeasurePoints() == null) {
-            String sql = "INSERT INTO measure_points (latitud, longitud, sensorType) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO measure_points (latitud, longitud, sensor_type) VALUES (?, ?, ?)";
             KeyHolder keyHolder = new GeneratedKeyHolder();
 
             jdbcTemplate.update(
@@ -79,7 +78,7 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                 measurePointsEntity.setIdMeasurePoints(generatedId.longValue());
             }
         } else {
-            String sql = "UPDATE measure_points SET latitud = ?, longitud = ?, sensorType = ? WHERE idMeasurePoints = ?";
+            String sql = "UPDATE measure_points SET latitud = ?, longitud = ?, sensor_type = ? WHERE id_measure_points = ?";
             jdbcTemplate.update(
                 sql,
                 measurePointsEntity.getIdMeasurePoints(),
@@ -93,7 +92,7 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
 
     @Override
     public int update(MeasurePointsEntity  measurePointsEntity){
-        String sql = "UPDATE measure_points SET longitud = ?, latitud = ?, sensorType = ? WHERE idMeasurePoints = ?";
+        String sql = "UPDATE measure_points SET longitud = ?, latitud = ?, sensor_type = ? WHERE id_measure_points = ?";
         return jdbcTemplate.update(sql, measurePointsEntity.getLongitud(),
                 measurePointsEntity.getLatitud(),
                 measurePointsEntity.getSensorType(),
@@ -178,13 +177,12 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                         ) < 50;
                     """;
         try{
-            List<MeasurePointsEntity> measurePointsEntity = jdbcTemplate.query(
+            return jdbcTemplate.query(
                     sql,
                     new BeanPropertyRowMapper<>(MeasurePointsEntity.class),
                     latitude,
                     longitude
             );
-            return measurePointsEntity;
         }catch (EmptyResultDataAccessException e){
             return List.of();
         }

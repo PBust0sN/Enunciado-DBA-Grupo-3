@@ -24,7 +24,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
 
     @Override
     public Optional<MeasurementEntity> findById(long id) {
-        String sql = "SELECT id_measurement, value_measurement, date_measurement, id_points_measurement, id_dataset FROM measurements WHERE id_measurement = ?";
+        String sql = "SELECT id_measurement, value_measurement, date_measurement, id_measure_points, id_dataset FROM measurements WHERE id_measurement = ?";
         try {
             MeasurementEntity measurementEntity = jdbcTemplate.queryForObject(
                     sql,
@@ -39,7 +39,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
 
     @Override
     public MeasurementEntity save(MeasurementEntity measurementEntity) {
-        String sql = "INSERT INTO measurements (value_measurement, date_measurement, id_points_measurement, id_dataset) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO measurements (value_measurement, date_measurement, id_measure_points, id_dataset) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(
                 sql,
                 measurementEntity.getValue_measurement(),
@@ -87,15 +87,13 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
         String sql = """
                      SELECT
                      id_measure_points,
-                     AVG(CASE WHEN date_measurement >= CURRENT_DATE - INTERVAL '1 year' THEN value_measurement END) - AVG(value_measurement) AS anomalia 
-                     FROM measurements 
+                     AVG(CASE WHEN date_measurement >= CURRENT_DATE - INTERVAL '1 year' THEN value_measurement END) - AVG(value_measurement) AS anomalia FROM measurements
                      GROUP BY id_measure_points""";
         try {
-            List<AnomaliaDTO> anomaliaDTO = jdbcTemplate.query(
+            return jdbcTemplate.query(
                     sql,
                     new BeanPropertyRowMapper<>(AnomaliaDTO.class)
             );
-            return anomaliaDTO;
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

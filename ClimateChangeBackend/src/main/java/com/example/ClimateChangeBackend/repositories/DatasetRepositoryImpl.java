@@ -1,7 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
 import com.example.ClimateChangeBackend.dtos.TSMeasureDTO;
-import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
 import com.example.ClimateChangeBackend.dtos.InterpolarDatosSemDTO;
 import com.example.ClimateChangeBackend.entities.DatasetEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -72,7 +71,7 @@ public class DatasetRepositoryImpl implements DatasetRepository {
     @Override
     public DatasetEntity save(DatasetEntity datasetEntity) {
         if (datasetEntity.getIdDataset() == null){
-            String sql = "INSERT INTO dataset (id_dataset, name_dataset, description_dataset, source_dataset, date_autorization_dataset) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO dataset (id_dataset, name_dataset, description_dataset, source_dataset, date_authorization_dataset) VALUES (?, ?, ?, ?, ?)";
             KeyHolder keyHolder = new GeneratedKeyHolder();
 
             jdbcTemplate.update(
@@ -94,7 +93,7 @@ public class DatasetRepositoryImpl implements DatasetRepository {
                 datasetEntity.setIdDataset(generatedId.longValue());
             }
         }else {
-            String sql = "UPDATE dataset SET name_dataset = ?, description_dataset = ?, source_dataset = ?, date_autorization_dataset = ? WHERE id_dataset = ?";
+            String sql = "UPDATE dataset SET name_dataset = ?, description_dataset = ?, source_dataset = ?, date_authorization_dataset = ? WHERE id_dataset = ?";
             jdbcTemplate.update(
                     sql,
                     datasetEntity.getNameDataset(),
@@ -138,7 +137,7 @@ public class DatasetRepositoryImpl implements DatasetRepository {
     @Override
     public List<InterpolarDatosSemDTO> interpolar_datos_semanales(Long id_dataset) {
         String sql = """
-            SELECT id_measure_points, week_start, week_end, avg_value FROM interpolar_datos_semanales(?) ORDER BY id_measure_points, week_start """;
+            SELECT id_measure_points, week_start, week_end, avg_value FROM interpolar_datos_semanales(?) ORDER BY id_measure_points, week_start""";
 
         try {
             return jdbcTemplate.query(
@@ -156,5 +155,11 @@ public class DatasetRepositoryImpl implements DatasetRepository {
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>(); // devuelve lista vacía en vez de null
         }
+    }
+
+    @Override
+    public void deleteById(Long idDataset) {
+        String sql = "DELETE FROM dataset WHERE id_dataset = ?";
+        jdbcTemplate.update(sql, idDataset);
     }
 }
