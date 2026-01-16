@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
 import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
@@ -188,4 +189,26 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
             return List.of();
         }
     }
+
+    // Consulta 4.2 para puntos
+    @Override
+    public List<InvalidPointDTO> findInvalidPoints() {
+        String sql = """
+                SELECT id,
+                       ST_AsText(geom) AS wkt
+                FROM measure_point
+                WHERE NOT ST_IsValid(geom);
+                """;
+        try{
+            List<InvalidPointDTO> invalidPointsDTO = jdbcTemplate.query(
+                    sql,
+                    new BeanPropertyRowMapper<>(InvalidPointDTO.class)
+            );
+            return invalidPointsDTO;
+
+        }catch (EmptyResultDataAccessException e){
+            return List.of();
+        }
+    }
+
 }

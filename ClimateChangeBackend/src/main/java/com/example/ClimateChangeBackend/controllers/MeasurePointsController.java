@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.controllers;
 
+import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.MeasurePointRequest;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import com.example.ClimateChangeBackend.services.MeasurePointsService;
@@ -72,4 +73,10 @@ public class    MeasurePointsController {
         List<MeasurePointsEntity> measurePoints = measurePointsService.getPointsLessThan50(lat, lon);
         return ResponseEntity.ok().body(measurePoints);
     }
+
+    @GetMapping("/getInvalidPoints")
+    public ResponseEntity<List<InvalidPointDTO>> getInvalidPoints() {
+        return ResponseEntity.ok().body(measurePointsService.getInvalidPoints());
+    }
+
 }
