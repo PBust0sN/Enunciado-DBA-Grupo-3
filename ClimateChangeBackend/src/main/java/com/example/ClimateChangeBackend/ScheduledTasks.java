@@ -26,7 +26,7 @@ public class ScheduledTasks {
     }
     @Scheduled(cron = "0 0 */6 * * *")
     public void scheduledRefresh() {
-        log.info("ACTUALIZANDO VISTA MATERIALIZADA");
+        //log.info("ACTUALIZANDO VISTA MATERIALIZADA");
         monthlyTendencyService.refreshMonthlyTendency();
     }
 

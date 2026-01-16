@@ -1,9 +1,6 @@
 package com.example.ClimateChangeBackend.services;
 
-import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
-import com.example.ClimateChangeBackend.dtos.MeasurePointRequest;
-import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
-import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
+import com.example.ClimateChangeBackend.dtos.*;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import com.example.ClimateChangeBackend.repositories.MeasurePointsRepository;
 import lombok.AllArgsConstructor;
@@ -92,5 +89,9 @@ public class MeasurePointsService {
     // Consulta 4.2 para puntos
     public List<InvalidPointDTO> getInvalidPoints() {
         return measurePointsRepository.findInvalidPoints();
+    }
+
+    public List<CO2DistanceDTO> get50kmCO2Temperature(){
+        return measurePointsRepository.get50kmCO2Temperature();
     }
 }
