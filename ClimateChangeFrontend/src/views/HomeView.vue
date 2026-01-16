@@ -113,7 +113,8 @@
       </div>
     </section>
 
-    <section class="welcome-message">
+    
+    <section v-if="!isLoggedIn" class="welcome-message">
       <h2>Monitor del Cambio Climático</h2>
       <p>Accede para consultar datos detallados, gráficos históricos y proyecciones climáticas</p>
       <div class="action-buttons">
@@ -123,6 +124,14 @@
     </section>
   </div>
 </template>
+
+<script setup>
+import { computed } from 'vue';
+
+const isLoggedIn = computed(() => {
+  return localStorage.getItem('user') !== null;
+});
+</script>
 
 <style scoped>
 .home-container {

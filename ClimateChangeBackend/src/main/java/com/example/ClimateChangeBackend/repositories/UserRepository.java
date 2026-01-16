@@ -2,6 +2,7 @@ package com.example.ClimateChangeBackend.repositories;
 
 import com.example.ClimateChangeBackend.entities.UserEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -13,4 +14,6 @@ public interface UserRepository {
     UserEntity save(UserEntity userEntity);
     int updateRefreshToken(Long userId, String refreshToken, Long expiration);
     int clearRefreshToken(Long userId);
+    List<UserEntity> findAll();
+    void delete(UserEntity userEntity);
 }

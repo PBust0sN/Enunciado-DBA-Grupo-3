@@ -7,10 +7,11 @@ export default defineComponent({
     return {
       menuItems: [
         /*This is just for adjusting the list*/ 
-        {label: 'Inicio', to: '/' },
+        { label: 'Inicio', to: '/' },
         { label: 'Home', to: '/' },
         { label: 'Filtrar Datasets', to: '/data' },
         { label: 'Mapa', to: '/map' },
+        { label: 'Consultas', to: '/consults'}
       ]
     }
   }

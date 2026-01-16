@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class AnomaliaDTO {
 
     private Long id_measure_points;
-    private double anomalia;
+    private Double anomalia;
 }

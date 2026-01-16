@@ -13,7 +13,7 @@ const userName = first_name && last_name ? `${first_name} ${last_name}` : 'Invit
 <template>
   <v-app>
     <HeaderComponent :user-name="userName" />
-    <Sidebar />
+
     <v-main>
       <v-container class="pa-0" fluid>
         <RouterView />
@@ -30,7 +30,7 @@ const userName = first_name && last_name ? `${first_name} ${last_name}` : 'Invit
   --color-primary: #3498db;
   --color-primary-dark: #2980b9;
   --color-secondary: #2ecc71;
-  --color-background: #f8f9fa;
+  --color-background: #f0f0f0;
   --color-background-soft: #ffffff;
   --color-background-mute: #f1f5f9;
   --color-border: #e2e8f0;

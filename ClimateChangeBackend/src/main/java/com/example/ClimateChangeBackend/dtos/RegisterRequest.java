@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.example.ClimateChangeBackend.entities.Role.ROLE_EMPLOYEE;
 
 @Data
 @Builder
@@ -38,5 +37,5 @@ public class RegisterRequest {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "The password must be at least 8 characters long")
     private String password;
-    private Role role = ROLE_EMPLOYEE;
+    private Role role = Role.ROLE_USER;
 }

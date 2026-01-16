@@ -2,15 +2,13 @@ package com.example.ClimateChangeBackend.controllers;
 
 import com.example.ClimateChangeBackend.entities.MonthlyTendencyEntity;
 import com.example.ClimateChangeBackend.services.MonthlyTendencyService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/monthly-tendency")
+@RequestMapping("/api/v1/monthly-tendency")
+@CrossOrigin("*")
 public class MonthlyTendencyController {
 
     private final MonthlyTendencyService service;
@@ -19,8 +17,9 @@ public class MonthlyTendencyController {
         this.service = monthlyTendencyService;
     }
 
-    @GetMapping
+    @GetMapping("/get-all")
     public List<MonthlyTendencyEntity> getAll() {
+
         return service.getMonthlyTendencies();
     }
 

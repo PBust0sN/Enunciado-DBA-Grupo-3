@@ -103,7 +103,7 @@ INSERT INTO measurements (value_measurement, date_measurement, id_measure_points
 (12150.3, '2024-01-26 12:15:00+00', 12, 6),
 (12080.9, '2024-06-21 14:45:00+00', 12, 6),
 
-(25.1, '2023-08-13 13:00:00+00', 13, 1),
+(44.1, '2023-08-13 13:00:00+00', 13, 1),
 (24.7, '2023-09-13 14:00:00+00', 13, 1),
 (25.3, '2024-01-27 12:30:00+00', 13, 1),
 (24.8, '2024-06-22 15:00:00+00', 13, 1),
@@ -170,7 +170,7 @@ INSERT INTO measurements (value_measurement, date_measurement, id_measure_points
 (478.0, '2024-05-15 13:00:00+00', 10, 4),
 (480.5, '2024-07-10 15:45:00+00', 10, 4),
 -- Punto 1 - Temperatura
-(27.2, '2025-01-10 12:00:00+00', 1, 1),
+(43.2, '2025-01-10 12:00:00+00', 1, 1),
 (26.9, '2025-03-05 09:30:00+00', 1, 1),
 (28.1, '2025-06-01 15:45:00+00', 1, 1),
 -- Punto 2 - CO2
@@ -184,7 +184,7 @@ INSERT INTO measurements (value_measurement, date_measurement, id_measure_points
 (12480.5, '2025-06-20 12:45:00+00', 4, 6),
 -- Punto 5 - Temperatura
 (27.8, '2025-05-10 14:00:00+00', 5, 1),
-(28.2, '2025-06-15 16:30:00+00', 5, 1),
+(38.6, '2025-06-15 16:30:00+00', 5, 1),
 -- Punto 6 - CO2
 (466.0, '2025-03-10 09:15:00+00', 6, 4),
 (473.5, '2025-07-12 15:00:00+00', 6, 4),
@@ -393,16 +393,58 @@ $$ LANGUAGE plpgsql;
    -- Creación de la vista materializada
 CREATE MATERIALIZED VIEW tendencia_mensual AS
 SELECT
-    mp.sensor_type,
-    EXTRACT(YEAR FROM m.date_measurement) AS year,
-  EXTRACT(MONTH FROM m.date_measurement) AS month,
-  AVG(m.value_measurement) AS average
+            ROW_NUMBER() OVER (ORDER BY mp.sensor_type, m.date_measurement) AS id,
+            mp.sensor_type,
+            EXTRACT(YEAR FROM m.date_measurement) AS year,
+            EXTRACT(MONTH FROM m.date_measurement) AS month,
+            AVG(m.value_measurement) AS average
 FROM measurements m
-    JOIN dataset d ON m.id_dataset = d.id_dataset
-    JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
-GROUP BY mp.sensor_type, year, month
+         JOIN dataset d ON m.id_dataset = d.id_dataset
+         JOIN measure_points mp ON m.id_measure_points = mp.id_measure_points
+GROUP BY mp.sensor_type, year, month, m.date_measurement
 ORDER BY year, month;
 
--- Indexación para refrescar
 CREATE UNIQUE INDEX idx_tendencia_mensual_unique
-    ON tendencia_mensual (sensor_type, year, month);
+    ON tendencia_mensual (id);
+
+-- Actualizaciones enunciado 2
+
+UPDATE measure_points
+SET geom = ST_SetSRID(ST_MakePoint(longitud, latitud), 4326)
+WHERE geom IS NULL
+  AND latitud IS NOT NULL
+  AND longitud IS NOT NULL;
+
+
+INSERT INTO affected_areas (name, area_type, geom)
+VALUES ('Zona Riesgo Santiago', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+     -70.1400 -33.4600,
+     -70.1200 -33.4600,
+     -70.1200 -33.4400,
+     -70.1400 -33.4400,
+     -70.1400 -33.4600
+   ))'), 4326)),
+       ('Zona Riesgo Costa', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+     -71.6400 -33.6200,
+     -71.6200 -33.6200,
+     -71.6200 -33.6000,
+     -71.6400 -33.6000,
+     -71.6400 -33.6200
+   ))'), 4326));
+
+-- Consulta 3. Detección de Puntos en Zonas de Riesgo:
+-- Identificar qué puntos de medición caen dentro de polígonos
+-- definidos como "Zonas de Riesgo Climático" (ST_Intersects).
+SELECT mp.id_measure_points,
+       mp.latitud,
+       mp.longitud,
+       aa.id_area,
+       aa.name AS area_name
+FROM measure_points mp
+         JOIN affected_areas aa
+              ON ST_Intersects(mp.geom, aa.geom)
+WHERE aa.area_type = 'Zonas de Riesgo Climático';

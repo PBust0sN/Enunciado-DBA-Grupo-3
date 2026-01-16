@@ -24,14 +24,25 @@ const logout = async () => {
 }
 
 const items = [
-  { title: 'Inicio', icon: 'mdi-home', to: '/' },
   { title: 'Iniciar Sesión', icon: 'mdi-login', to: '/login', show: computed(() => !isLoggedIn.value) },
   { title: 'Registrarse', icon: 'mdi-account-plus', to: '/register', show: computed(() => !isLoggedIn.value) },
-  { title: 'Cerrar Sesión', icon: 'mdi-logout', action: logout, show: computed(() => isLoggedIn.value) },
 ]
+
+const menuItems = [
+        /*This is just for adjusting the list*/ 
+        { label: 'Home', to: '/',  },
+        //{ label: 'Filtrar Datasets', to: '/data', show: computed(() => isLoggedIn.value)},
+        { label: 'Mapa', to: '/map', show: computed(() => isLoggedIn.value)},
+        { label: 'Consultas', to: '/consults', show: computed(() => isLoggedIn.value)}
+]
+
 
 const filteredItems = computed(() => {
   return items.filter(item => !item.show || item.show.value)
+})
+
+const filteredMenuItems = computed(() => {
+  return menuItems.filter(item => !item.show || item.show.value)
 })
 </script>
 
@@ -51,8 +62,22 @@ const filteredItems = computed(() => {
           Cambio Climático
         </v-app-bar-title>
       </div>
+      <v-spacer >
+            <div class="d-flex justify-center align-center">
+              <v-btn
+                v-for="(item, index) in filteredMenuItems"  
+                :key="index"
+                :to="item.to"
+                color="primary"
+                variant="tonal"
+                class="mx-2"
+              >
+                {{ item.label }}
+              </v-btn>
+            </div>
+      </v-spacer>
 
-      <v-spacer></v-spacer>
+
 
       <div class="d-none d-md-flex">
         <v-btn 

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -191,5 +192,33 @@ public class AuthController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,deleteJwtCookie.toString())
                 .header(HttpHeaders.SET_COOKIE,deleteRefreshCookie.toString())
                 .body(new MessageResponse("Log out", true));
+    }
+
+    // CRUD operations for UserEntity (Admin only)
+    @GetMapping("/admin/users")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<UserEntity>> listUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/admin/users/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<UserEntity> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @PutMapping("/admin/users/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<?> updateUser(@PathVariable Long id,
+                                        @Valid @RequestBody RegisterRequest updateRequest) {
+        userService.updateUser(id, updateRequest);
+        return ResponseEntity.ok(new MessageResponse("User updated successfully", true));
+    }
+
+    @DeleteMapping("/admin/users/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new MessageResponse("User deleted successfully", true));
     }
 }
