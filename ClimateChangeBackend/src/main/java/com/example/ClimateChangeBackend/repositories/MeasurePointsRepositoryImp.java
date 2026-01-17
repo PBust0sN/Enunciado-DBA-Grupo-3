@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
 import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
 import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
@@ -209,4 +210,40 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
         }
     }
 
+    @Override
+    public List<CO2DistanceDTO> get50kmCO2Temperature() {
+        String sql = """
+                SELECT DISTINCT ON (co2.id_measure_points)
+                    co2.id_measure_points AS co2_point_id,
+                    temp.id_measure_points AS temp_point_id,
+                	co2.latitud AS latitud,
+                	co2.longitud AS longitud,
+                	co2.sensor_type AS sensor_type,
+                	ST_AsText(co2.geom) AS co2_geom,
+                    ST_Distance(
+                        co2.geom::geography,
+                        temp.geom::geography
+                    ) AS distance_meters
+                FROM measure_points co2
+                JOIN measure_points temp
+                    ON ST_DWithin(
+                        co2.geom::geography,
+                        temp.geom::geography,
+                        50000	
+                    )
+                WHERE co2.sensor_type = 'Emisiones de CO2'
+                  AND temp.sensor_type = 'Temperatura'
+                ORDER BY co2.id_measure_points, distance_meters;  
+                """;
+        try{
+            List<CO2DistanceDTO> co2DistanceDTOS = jdbcTemplate.query(
+                    sql,
+                    new BeanPropertyRowMapper<>(CO2DistanceDTO.class)
+            );
+            System.out.println(co2DistanceDTOS);
+            return co2DistanceDTOS;
+        }catch (EmptyResultDataAccessException e){
+            return List.of();
+        }
+    }
 }

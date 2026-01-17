@@ -1,7 +1,9 @@
 package com.example.ClimateChangeBackend.dtos;
 
-import java.awt.*;
+import lombok.Data;
 
+import java.awt.*;
+@Data
 public class InvalidPointDTO {
     private Long id;
     private String wkt;
@@ -14,19 +16,4 @@ public class InvalidPointDTO {
         this.wkt = wkt;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getWkt() {
-        return wkt;
-    }
-
-    public void setWkt(String wkt) {
-        this.wkt = wkt;
-    }
 }
