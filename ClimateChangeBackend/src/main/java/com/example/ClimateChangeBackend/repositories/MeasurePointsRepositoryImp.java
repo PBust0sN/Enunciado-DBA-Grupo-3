@@ -234,4 +234,50 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
             throw new RuntimeException("Error al obtener tendencia mensual por tipo de sensor", e);
         }
     }
+
+    @Override
+    public Double interpolateByNearestNeighbors(double lat, double lon) {
+
+        // primero verificaremos si es que existe un punto en la ubicación indicada
+        String exactPointSql = """
+            SELECT m.value_measurement
+            FROM measurement m
+            JOIN measure_point mp
+                ON m.id_measure_point = mp.id_measure_point
+            WHERE ST_Equals(
+                mp.geom,
+                ST_SetSRID(ST_MakePoint(?, ?), 4326)
+            )
+            LIMIT 1
+            """;
+
+        List<Double> exactValues = jdbcTemplate.query(
+                exactPointSql,
+                (rs, rowNum) -> rs.getDouble("value_measurement"),
+                lon,
+                lat
+        );
+
+        if (!exactValues.isEmpty()) {
+            //si el sensor ya existe devolvemos la primera médicion de este
+            return exactValues.get(0);
+        }
+
+        // Interpolación K-NN (3 vecinos)
+        String knnSql = """
+            SELECT AVG(m.value_measurement)
+            FROM measurement m
+            JOIN measure_point mp
+                ON m.id_measure_point = mp.id_measure_point
+            ORDER BY mp.geom <-> ST_SetSRID(ST_MakePoint(?, ?), 4326)
+            LIMIT 3
+            """;
+
+        return jdbcTemplate.queryForObject(
+                knnSql,
+                Double.class,
+                lon,
+                lat
+        );
+    }
 }

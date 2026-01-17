@@ -117,4 +117,9 @@ public class MeasurePointsService {
     public List<InvalidPointDTO> getInvalidPoints() {
         return measurePointsRepository.findInvalidPoints();
     }
+
+    public Double interpolateByNearestNeighbors(double lat, double lon){
+        return measurePointsRepository.interpolateByNearestNeighbors(lat, lon);
+    }
+
 }

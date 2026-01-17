@@ -24,4 +24,5 @@ public interface MeasurePointsRepository {
     // vista monthly tendency
     List<MonthlyTendencyDTO> findAllMonthlyTendencies();
     List<MonthlyTendencyDTO> findBySensorType(String sensorType);
+    Double interpolateByNearestNeighbors(double lat, double lon);
 }

@@ -90,4 +90,9 @@ public class    MeasurePointsController {
     public List<MonthlyTendencyDTO> getBySensorType(@PathVariable String sensorType) {
         return measurePointsService.getMonthlyTendenciesBySensorType(sensorType);
     }
+
+    @GetMapping("interpolateByNearestNeighbors/{lat}/{lon}")
+    public ResponseEntity<Double> interpolateByNearestNeighbors(@PathVariable("lat") double lat,@PathVariable("lon") double lon){
+        return ResponseEntity.ok().body(measurePointsService.interpolateByNearestNeighbors(lat,lon));
+    }
 }
