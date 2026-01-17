@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
 import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
 import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
@@ -25,4 +26,5 @@ public interface MeasurePointsRepository {
     List<MonthlyTendencyDTO> findAllMonthlyTendencies();
     List<MonthlyTendencyDTO> findBySensorType(String sensorType);
     Double interpolateByNearestNeighbors(double lat, double lon);
+    List<CO2DistanceDTO> get50kmCO2Temperature();
 }

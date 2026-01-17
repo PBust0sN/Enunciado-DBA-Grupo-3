@@ -122,4 +122,7 @@ public class MeasurePointsService {
         return measurePointsRepository.interpolateByNearestNeighbors(lat, lon);
     }
 
+    public List<CO2DistanceDTO> get50kmCO2Temperature(){
+        return measurePointsRepository.get50kmCO2Temperature();
+    }
 }
