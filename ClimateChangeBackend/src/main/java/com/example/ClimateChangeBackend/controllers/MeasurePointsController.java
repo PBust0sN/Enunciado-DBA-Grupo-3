@@ -3,6 +3,7 @@ package com.example.ClimateChangeBackend.controllers;
 import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
 import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.MeasurePointRequest;
+import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import com.example.ClimateChangeBackend.services.MeasurePointsService;
 import jakarta.validation.Valid;
@@ -80,6 +81,21 @@ public class    MeasurePointsController {
         return ResponseEntity.ok().body(measurePointsService.getInvalidPoints());
     }
 
+    @GetMapping("monthly-tendency/get-all")
+    public List<MonthlyTendencyDTO> getAllMonthlyTendencies() {
+
+        return measurePointsService.getMonthlyTendencies();
+    }
+
+    @GetMapping("monthly-tendency/sensor-type/{sensorType}")
+    public List<MonthlyTendencyDTO> getBySensorType(@PathVariable String sensorType) {
+        return measurePointsService.getMonthlyTendenciesBySensorType(sensorType);
+    }
+
+    @GetMapping("interpolateByNearestNeighbors/{lat}/{lon}")
+    public ResponseEntity<Double> interpolateByNearestNeighbors(@PathVariable("lat") double lat,@PathVariable("lon") double lon){
+        return ResponseEntity.ok().body(measurePointsService.interpolateByNearestNeighbors(lat,lon));
+    }
     @GetMapping("/get50kmCO2Temperature")
     public ResponseEntity<List<CO2DistanceDTO>> get50kmCO2Temperature(){
         return ResponseEntity.ok().body(measurePointsService.get50kmCO2Temperature());

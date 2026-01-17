@@ -2,6 +2,7 @@ package com.example.ClimateChangeBackend.repositories;
 
 import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
 import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
+import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
 import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
 import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
@@ -20,5 +21,10 @@ public interface MeasurePointsRepository {
     List<InvalidPointDTO> findInvalidPoints();
 
     List<MeasurePointsEntity> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude);
+
+    // vista monthly tendency
+    List<MonthlyTendencyDTO> findAllMonthlyTendencies();
+    List<MonthlyTendencyDTO> findBySensorType(String sensorType);
+    Double interpolateByNearestNeighbors(double lat, double lon);
     List<CO2DistanceDTO> get50kmCO2Temperature();
 }

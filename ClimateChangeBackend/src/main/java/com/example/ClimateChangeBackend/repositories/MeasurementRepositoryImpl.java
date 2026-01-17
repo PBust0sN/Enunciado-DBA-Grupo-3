@@ -1,13 +1,20 @@
 package com.example.ClimateChangeBackend.repositories;
 
 import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
+import com.example.ClimateChangeBackend.entities.DatasetEntity;
 import com.example.ClimateChangeBackend.entities.MeasurementEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +45,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
     }
 
     @Override
-    public MeasurementEntity save(MeasurementEntity measurementEntity) {
+    public MeasurementEntity update(MeasurementEntity measurementEntity) {
         String sql = "INSERT INTO measurements (value_measurement, date_measurement, id_measure_points, id_dataset) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(
                 sql,
@@ -98,5 +105,42 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
             return null;
         }
     }
+    @Override
+    public MeasurementEntity create(MeasurementEntity measurementEntity){
+        String sql = "INSERT INTO measurements (value_measurement, date_measurement, id_measure_points, id_dataset) VALUES (?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
+        jdbcTemplate.update(
+                connection ->  {
+                    PreparedStatement ps = connection.prepareStatement(
+                            sql,
+                            new String[] { "id_measurement" }
+                    );
+                    ps.setDouble(1, measurementEntity.getValue_measurement());
+                    ps.setObject(2, measurementEntity.getDate_measurement(), Types.TIMESTAMP_WITH_TIMEZONE);
+                    ps.setInt(3, measurementEntity.getId_points_measurement());
+                    ps.setInt(4, measurementEntity.getId_dataset());
+                    return ps;
+                },
+                keyHolder
+        );
+        Number generatedId = keyHolder.getKey();
+        if(generatedId != null) {
+            measurementEntity.setId_measurement(generatedId.longValue());
+        }
+
+        return measurementEntity;
+    }
+
+    @Override
+    public List<MeasurementEntity> findAll(){
+        String sql = "SELECT * FROM measurements";
+        try{
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(MeasurementEntity.class));
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        } catch (Exception e){
+            throw new RuntimeException("Error al obtener las mediciones",e);
+        }
+    }
 }

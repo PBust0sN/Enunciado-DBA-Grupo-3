@@ -2,6 +2,7 @@ package com.example.ClimateChangeBackend.repositories;
 
 import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
 import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
+import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
 import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
 import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -211,6 +213,74 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
     }
 
     @Override
+    public List<MonthlyTendencyDTO> findAllMonthlyTendencies() {
+        String sql = "SELECT * FROM tendencia_mensual";
+        try{
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(MonthlyTendencyDTO.class));
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        } catch (Exception e){
+            throw new RuntimeException("Error al obtener tendencia mensual",e);
+        }
+    }
+
+    @Override
+    public List<MonthlyTendencyDTO> findBySensorType(String sensorType) {
+        String sql = "SELECT * FROM tendencia_mensual WHERE sensor_type = ?";
+        try {
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(MonthlyTendencyDTO.class), sensorType);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener tendencia mensual por tipo de sensor", e);
+        }
+    }
+
+    @Override
+    public Double interpolateByNearestNeighbors(double lat, double lon) {
+
+        // primero verificaremos si es que existe un punto en la ubicación indicada
+        String exactPointSql = """
+            SELECT m.value_measurement
+            FROM measurement m
+            JOIN measure_point mp
+                ON m.id_measure_point = mp.id_measure_point
+            WHERE ST_Equals(
+                mp.geom,
+                ST_SetSRID(ST_MakePoint(?, ?), 4326)
+            )
+            LIMIT 1
+            """;
+
+        List<Double> exactValues = jdbcTemplate.query(
+                exactPointSql,
+                (rs, rowNum) -> rs.getDouble("value_measurement"),
+                lon,
+                lat
+        );
+
+        if (!exactValues.isEmpty()) {
+            //si el sensor ya existe devolvemos la primera médicion de este
+            return exactValues.get(0);
+        }
+
+        // Interpolación K-NN (3 vecinos)
+        String knnSql = """
+            SELECT AVG(m.value_measurement)
+            FROM measurement m
+            JOIN measure_point mp
+                ON m.id_measure_point = mp.id_measure_point
+            ORDER BY mp.geom <-> ST_SetSRID(ST_MakePoint(?, ?), 4326)
+            LIMIT 3
+            """;
+
+        return jdbcTemplate.queryForObject(
+                knnSql,
+                Double.class,
+                lon,
+                lat
+        );
+    }
     public List<CO2DistanceDTO> get50kmCO2Temperature() {
         String sql = """
                 SELECT DISTINCT ON (co2.id_measure_points)

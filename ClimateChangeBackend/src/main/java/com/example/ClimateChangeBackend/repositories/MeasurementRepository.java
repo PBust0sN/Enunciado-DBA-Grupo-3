@@ -9,8 +9,12 @@ import java.util.Optional;
 
 public interface MeasurementRepository {
     Optional<MeasurementEntity> findById(long id);
-    MeasurementEntity save(MeasurementEntity measurementEntity);
+    MeasurementEntity update(MeasurementEntity measurementEntity);
     int deleteById(long id);
+    MeasurementEntity create(MeasurementEntity measurementEntity);
+    List<MeasurementEntity> findAll();
+
+
     List<Map<String, Object>> extremeEventDetection();
     List<AnomaliaDTO> tempetureAnomalyCalculation();
 }
