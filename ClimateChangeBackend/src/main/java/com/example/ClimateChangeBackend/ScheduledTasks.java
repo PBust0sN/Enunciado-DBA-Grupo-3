@@ -1,5 +1,6 @@
 package com.example.ClimateChangeBackend;
 
+import com.example.ClimateChangeBackend.services.MeasurePointsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,10 +11,10 @@ import java.util.Date;
 
 @Component
 public class ScheduledTasks {
-    private final MonthlyTendencyService monthlyTendencyService;
+    private final MeasurePointsService measurePointsService;
 
-    public ScheduledTasks(MonthlyTendencyService monthlyTendencyService) {
-        this.monthlyTendencyService = monthlyTendencyService;
+    public ScheduledTasks(MeasurePointsService measurePointsService) {
+        this.measurePointsService = measurePointsService;
     }
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
 
@@ -26,7 +27,7 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 0 */6 * * *")
     public void scheduledRefresh() {
         //log.info("ACTUALIZANDO VISTA MATERIALIZADA");
-        monthlyTendencyService.refreshMonthlyTendency();
+        measurePointsService.refreshMonthlyTendency();
     }
 
 }
