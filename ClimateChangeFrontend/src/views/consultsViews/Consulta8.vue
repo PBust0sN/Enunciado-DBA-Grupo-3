@@ -1,13 +1,13 @@
 <script setup>
 
 import { ref } from 'vue';
-import monthlyTendencyService from '@/services/monthlyTendency.service';
+import measurePointsService from '@/services/measurePoints.service';
 
 const list = ref([]);
 
 const fetchData = async () => {
     try {
-        const response = await monthlyTendencyService.getMonthlyTendencies();
+        const response = await measurePointsService.getMonthlyTendencies();
         list.value = response.data;
     } catch (error) {
         console.error('Error fetching data:', error);

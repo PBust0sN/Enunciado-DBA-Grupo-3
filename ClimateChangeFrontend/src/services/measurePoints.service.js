@@ -37,7 +37,15 @@ const getLessThan50 = (lat, lon) => {
 const getInvalidPoints = () => {
     return api.get(`${basePath}/getInvalidPoints`)
 }
-
+const getMonthlyTendencies = () =>{
+    return api.get(`${basePath}/monthly-tendency/get-all`)
+}
+const get50kmCO2Temperature = () =>{
+    return api.get(`${basePath}/get50kmCO2Temperature`)
+}
+const interpolateByNearestNeighbors = (lat, lon) =>{
+    return api.get(`${basePath}/interpolateByNearestNeighbors/${lat}/${lon}`)
+}
 export default {
     findById,
     getAll,
@@ -47,5 +55,8 @@ export default {
     getPointsWithoutGeoreference,
     getByLatLon,
     getLessThan50,
-    getInvalidPoints
+    getInvalidPoints,
+    getMonthlyTendencies,
+    get50kmCO2Temperature,
+    interpolateByNearestNeighbors
 }
