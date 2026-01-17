@@ -1,15 +1,16 @@
 package com.example.ClimateChangeBackend.services;
 
-import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
-import com.example.ClimateChangeBackend.dtos.MeasurePointRequest;
-import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
-import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
+import com.example.ClimateChangeBackend.dtos.*;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import com.example.ClimateChangeBackend.repositories.MeasurePointsRepository;
 import lombok.AllArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +20,31 @@ import java.util.Optional;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class MeasurePointsService {
 
+    private JdbcTemplate jdbcTemplate;
     private MeasurePointsRepository measurePointsRepository;
     private GeometryFactory geometryFactory;
+    private static final Logger log =
+            LoggerFactory.getLogger(MeasurePointsService.class);
+
+
+    public List<MonthlyTendencyDTO> getMonthlyTendencies() {
+        return measurePointsRepository.findAllMonthlyTendencies();
+    }
+
+    public List<MonthlyTendencyDTO> getMonthlyTendenciesBySensorType(String sensorType) {
+        return measurePointsRepository.findBySensorType(sensorType);
+    }
+
+    public void refreshMonthlyTendency() {
+        try {
+            jdbcTemplate.execute(
+                    "REFRESH MATERIALIZED VIEW CONCURRENTLY tendencia_mensual;"
+            );
+        } catch (DataAccessException e) {
+            log.warn("No se pudo refrescar la vista materializada tendencia_mensual", e);
+        }
+    }
+
 
     public Optional<MeasurePointsEntity> findById(Long id) {
         return measurePointsRepository.findById(id);

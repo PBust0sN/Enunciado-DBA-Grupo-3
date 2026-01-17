@@ -2,6 +2,7 @@ package com.example.ClimateChangeBackend.controllers;
 
 import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.MeasurePointRequest;
+import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import com.example.ClimateChangeBackend.services.MeasurePointsService;
 import jakarta.validation.Valid;
@@ -79,4 +80,14 @@ public class    MeasurePointsController {
         return ResponseEntity.ok().body(measurePointsService.getInvalidPoints());
     }
 
+    @GetMapping("monthly-tendency/get-all")
+    public List<MonthlyTendencyDTO> getAllMonthlyTendencies() {
+
+        return measurePointsService.getMonthlyTendencies();
+    }
+
+    @GetMapping("monthly-tendency/sensor-type/{sensorType}")
+    public List<MonthlyTendencyDTO> getBySensorType(@PathVariable String sensorType) {
+        return measurePointsService.getMonthlyTendenciesBySensorType(sensorType);
+    }
 }

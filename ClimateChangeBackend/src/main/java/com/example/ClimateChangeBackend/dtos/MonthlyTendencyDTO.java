@@ -1,4 +1,4 @@
-package com.example.ClimateChangeBackend.entities;
+package com.example.ClimateChangeBackend.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MonthlyTendencyEntity {
+public class MonthlyTendencyDTO {
     private String sensorType;
     private Integer year;
     private Integer month;

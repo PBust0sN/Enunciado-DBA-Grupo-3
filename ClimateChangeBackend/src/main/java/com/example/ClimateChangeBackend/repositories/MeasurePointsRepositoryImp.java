@@ -1,6 +1,7 @@
 package com.example.ClimateChangeBackend.repositories;
 
 import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
+import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
 import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
 import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -209,4 +211,27 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
         }
     }
 
+    @Override
+    public List<MonthlyTendencyDTO> findAllMonthlyTendencies() {
+        String sql = "SELECT * FROM tendencia_mensual";
+        try{
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(MonthlyTendencyDTO.class));
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        } catch (Exception e){
+            throw new RuntimeException("Error al obtener tendencia mensual",e);
+        }
+    }
+
+    @Override
+    public List<MonthlyTendencyDTO> findBySensorType(String sensorType) {
+        String sql = "SELECT * FROM tendencia_mensual WHERE sensor_type = ?";
+        try {
+            return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(MonthlyTendencyDTO.class), sensorType);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener tendencia mensual por tipo de sensor", e);
+        }
+    }
 }
