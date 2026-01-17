@@ -64,7 +64,7 @@ public class MeasurementController {
     @GetMapping("/calculate-anomalia")
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
     public ResponseEntity<List<AnomaliaDTO>> calculateAnomalia(){
-        List<AnomaliaDTO> anomaliaDTO = measurementService.tempetureAnomalyCalculation();
+        List<AnomaliaDTO> anomaliaDTO = measurementService.temperatureAnomalyCalculation();
         if(anomaliaDTO == null || anomaliaDTO.isEmpty()){
             return ResponseEntity.noContent().build();
         }

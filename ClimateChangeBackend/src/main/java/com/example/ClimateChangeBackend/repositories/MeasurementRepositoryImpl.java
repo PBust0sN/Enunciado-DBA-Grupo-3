@@ -1,7 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
 import com.example.ClimateChangeBackend.dtos.AnomaliaDTO;
-import com.example.ClimateChangeBackend.entities.DatasetEntity;
 import com.example.ClimateChangeBackend.entities.MeasurementEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,7 +10,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -90,7 +88,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
 
     // Consulta 1
     @Override
-    public List<AnomaliaDTO> tempetureAnomalyCalculation(){
+    public List<AnomaliaDTO> temperatureAnomalyCalculation(){
         String sql = """
                      SELECT
                      id_measure_points,
@@ -106,7 +104,7 @@ public class MeasurementRepositoryImpl implements MeasurementRepository {
         }
     }
     @Override
-    public MeasurementEntity create(MeasurementEntity measurementEntity){
+    public MeasurementEntity save(MeasurementEntity measurementEntity){
         String sql = "INSERT INTO measurements (value_measurement, date_measurement, id_measure_points, id_dataset) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

@@ -39,7 +39,7 @@ public class MeasurementService {
         return measurementRepository.extremeEventDetection();
     }
 
-    public List<AnomaliaDTO> tempetureAnomalyCalculation(){
-        return measurementRepository.tempetureAnomalyCalculation();
+    public List<AnomaliaDTO> temperatureAnomalyCalculation(){
+        return measurementRepository.temperatureAnomalyCalculation();
     }
 }

@@ -11,10 +11,11 @@ public interface MeasurementRepository {
     Optional<MeasurementEntity> findById(long id);
     MeasurementEntity update(MeasurementEntity measurementEntity);
     int deleteById(long id);
-    MeasurementEntity create(MeasurementEntity measurementEntity);
+    MeasurementEntity save(MeasurementEntity measurementEntity);
     List<MeasurementEntity> findAll();
 
 
     List<Map<String, Object>> extremeEventDetection();
-    List<AnomaliaDTO> tempetureAnomalyCalculation();
+    List<AnomaliaDTO> temperatureAnomalyCalculation();
+
 }

@@ -84,10 +84,10 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
             String sql = "UPDATE measure_points SET latitud = ?, longitud = ?, sensor_type = ? WHERE id_measure_points = ?";
             jdbcTemplate.update(
                 sql,
-                measurePointsEntity.getIdMeasurePoints(),
                 measurePointsEntity.getLatitud(),
                 measurePointsEntity.getLongitud(),
-                measurePointsEntity.getSensorType()
+                measurePointsEntity.getSensorType(),
+                measurePointsEntity.getIdMeasurePoints()
             );
         }
         return measurePointsEntity;
@@ -195,17 +195,16 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
     @Override
     public List<InvalidPointDTO> findInvalidPoints() {
         String sql = """
-                SELECT id,
+                SELECT id_measure_points,
                        ST_AsText(geom) AS wkt
-                FROM measure_point
+                FROM measure_points
                 WHERE NOT ST_IsValid(geom);
                 """;
         try{
-            List<InvalidPointDTO> invalidPointsDTO = jdbcTemplate.query(
+            return jdbcTemplate.query(
                     sql,
                     new BeanPropertyRowMapper<>(InvalidPointDTO.class)
             );
-            return invalidPointsDTO;
 
         }catch (EmptyResultDataAccessException e){
             return List.of();
@@ -239,18 +238,17 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
     @Override
     public Double interpolateByNearestNeighbors(double lat, double lon) {
 
-        // primero verificaremos si es que existe un punto en la ubicación indicada
         String exactPointSql = """
-            SELECT m.value_measurement
-            FROM measurement m
-            JOIN measure_point mp
-                ON m.id_measure_point = mp.id_measure_point
-            WHERE ST_Equals(
-                mp.geom,
-                ST_SetSRID(ST_MakePoint(?, ?), 4326)
-            )
-            LIMIT 1
-            """;
+        SELECT m.value_measurement
+        FROM measurements m
+        JOIN measure_points mp
+            ON m.id_measure_points = mp.id_measure_points
+        WHERE ST_Equals(
+            mp.geom,
+            ST_SetSRID(ST_MakePoint(?, ?), 4326)
+        )
+        LIMIT 1
+    """;
 
         List<Double> exactValues = jdbcTemplate.query(
                 exactPointSql,
@@ -260,27 +258,31 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
         );
 
         if (!exactValues.isEmpty()) {
-            //si el sensor ya existe devolvemos la primera médicion de este
             return exactValues.get(0);
         }
 
-        // Interpolación K-NN (3 vecinos)
         String knnSql = """
-            SELECT AVG(m.value_measurement)
-            FROM measurement m
-            JOIN measure_point mp
-                ON m.id_measure_point = mp.id_measure_point
+        SELECT AVG(sub.value_measurement)
+        FROM (
+            SELECT m.value_measurement
+            FROM measurements m
+            JOIN measure_points mp
+                ON m.id_measure_points = mp.id_measure_points
             ORDER BY mp.geom <-> ST_SetSRID(ST_MakePoint(?, ?), 4326)
             LIMIT 3
-            """;
+        ) AS sub
+    """;
 
-        return jdbcTemplate.queryForObject(
+        Double interpolatedValue = jdbcTemplate.queryForObject(
                 knnSql,
                 Double.class,
-                lon,
-                lat
+                lon, // X
+                lat  // Y
         );
+
+        return interpolatedValue != null ? interpolatedValue : 0.0;
     }
+
     public List<CO2DistanceDTO> get50kmCO2Temperature() {
         String sql = """
                 SELECT DISTINCT ON (co2.id_measure_points)
@@ -299,11 +301,11 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
                     ON ST_DWithin(
                         co2.geom::geography,
                         temp.geom::geography,
-                        50000	
+                        50000
                     )
                 WHERE co2.sensor_type = 'Emisiones de CO2'
                   AND temp.sensor_type = 'Temperatura'
-                ORDER BY co2.id_measure_points, distance_meters;  
+                ORDER BY co2.id_measure_points, distance_meters;
                 """;
         try{
             List<CO2DistanceDTO> co2DistanceDTOS = jdbcTemplate.query(
