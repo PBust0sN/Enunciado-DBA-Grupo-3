@@ -84,6 +84,7 @@ public class AffectedAreaRepositoryImpl implements AffectedAreaRepository {
         String sql = """
             SELECT mp.id_measure_points,
                    mp.latitud,
+                   mp.sensor_type,
                    mp.longitud,
                    aa.id_area,
                    aa.name AS area_name
@@ -96,6 +97,7 @@ public class AffectedAreaRepositoryImpl implements AffectedAreaRepository {
                 .idMeasurePoints(rs.getLong("id_measure_points"))
                 .latitud(rs.getDouble("latitud"))
                 .longitud(rs.getDouble("longitud"))
+                .sensorType(rs.getString("sensor_type"))
                 .idArea(rs.getLong("id_area"))
                 .areaName(rs.getString("area_name"))
                 .build());

@@ -48,6 +48,7 @@ const drawPoints = () => {
       .addTo(map)
       .bindPopup(`
         <strong>ID Punto:</strong> ${item.idMeasurePoints}<br/>
+        <strong>Tipo Sensor:</strong> ${item.sensorType}<br/>
         <strong>Área:</strong> ${item.areaName}
       `);
 
@@ -123,6 +124,7 @@ const drawPolygons = () => {
     })
       .addTo(map)
       .bindPopup(`
+        <strong>Área:</strong> ${area.idArea}<br/>
         <strong>Área:</strong> ${area.name}<br/>
         <strong>Tipo:</strong> ${area.areaType}
       `);

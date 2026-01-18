@@ -467,6 +467,7 @@ VALUES ('Zona Riesgo Santiago', 'Zonas de Riesgo Climático',
 SELECT mp.id_measure_points,
        mp.latitud,
        mp.longitud,
+       mp.sensor_type,
        aa.id_area,
        aa.name AS area_name
 FROM measure_points mp

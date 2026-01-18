@@ -9,6 +9,7 @@ public class MeasurePointAreaResponse {
     private Long idMeasurePoints;
     private Double latitud;
     private Double longitud;
+    private String sensorType;
     private Long idArea;
     private String areaName;
 }
