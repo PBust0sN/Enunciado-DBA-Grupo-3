@@ -26,7 +26,15 @@ INSERT INTO measure_points (latitud, longitud, sensor_type) VALUES
 (-33.443456, -70.137890, 'Nivel del mar'),
 (NULL, -70.140000, 'Temperatura'),      -- latitud nula
 (-33.440000, NULL, 'Emisiones de CO2'), -- longitud nula
-(0, 0, 'Nivel del mar');
+(0, 0, 'Nivel del mar'),
+(-33.45, -70.13, 'Temperatura'),
+-- Latitud fuera de rango
+(120.0, -70.123456, 'Temperatura'),
+
+-- Longitud fuera de rango
+(-33.456789, 250.0, 'Emisiones de CO2'),
+(-33.462345, -70.121234, 'Sin sensor'),
+(-33.457654, -70.125765, 'Sin sensor');
 
 
 -- Poblar tabla de conjuntos de datos
@@ -434,7 +442,24 @@ VALUES ('Zona Riesgo Santiago', 'Zonas de Riesgo Climático',
      -71.6200 -33.6000,
      -71.6400 -33.6000,
      -71.6400 -33.6200
-   ))'), 4326));
+   ))'), 4326)),
+       ('Zona Riesgo Invalida', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+         -70.1300 -33.4500,
+         -70.1100 -33.4300,
+         -70.1300 -33.4300,
+         -70.1100 -33.4500,
+         -70.1300 -33.4500
+     ))'), 4326)),
+       ('Zona Riesgo Area Cero', 'Zonas de Riesgo Climático',
+        ST_SetSRID(
+                ST_GeomFromText('POLYGON((
+         -70.1600 -33.4800,
+         -70.1500 -33.4800,
+         -70.1400 -33.4800,
+         -70.1600 -33.4800
+     ))'), 4326));
 
 -- Consulta 3. Detección de Puntos en Zonas de Riesgo:
 -- Identificar qué puntos de medición caen dentro de polígonos

@@ -76,6 +76,7 @@ public class    MeasurePointsController {
         return ResponseEntity.ok().body(measurePoints);
     }
 
+    // Consulta 4 lab2
     @GetMapping("/getInvalidPoints")
     public ResponseEntity<List<InvalidPointDTO>> getInvalidPoints() {
         return ResponseEntity.ok().body(measurePointsService.getInvalidPoints());
@@ -96,9 +97,14 @@ public class    MeasurePointsController {
     public ResponseEntity<Double> interpolateByNearestNeighbors(@PathVariable("lat") double lat,@PathVariable("lon") double lon){
         return ResponseEntity.ok().body(measurePointsService.interpolateByNearestNeighbors(lat,lon));
     }
+
     @GetMapping("/get50kmCO2Temperature")
     public ResponseEntity<List<CO2DistanceDTO>> get50kmCO2Temperature(){
         return ResponseEntity.ok().body(measurePointsService.get50kmCO2Temperature());
     }
 
+    @GetMapping("/getNoSensor")
+    public ResponseEntity<List<MeasurePointsEntity>> getNoSensor(){
+        return ResponseEntity.ok().body(measurePointsService.getSinSensor());
+    }
 }

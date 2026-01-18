@@ -154,7 +154,7 @@ export default defineComponent({
             Encontrar puntos de medición de CO2 que estén en un radio de 50km de puntos de medición de temperatura y devolver la distancia.
           </v-card-text>
           <v-card-text>
-            <v-btn class="mt-3" color="primary" href="/consults/consulta8">Consultar</v-btn>
+            <v-btn class="mt-3" color="primary" href="/consults/consulta9">Consultar</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -169,7 +169,7 @@ export default defineComponent({
             Para una ubicación sin sensores, estimar el valor climático promediando los valores de los 3 sensores más cercanos.
           </v-card-text>
           <v-card-text>
-            <v-btn class="mt-3" color="primary" href="/consults/consulta8">Consultar</v-btn>
+            <v-btn class="mt-3" color="primary" href="/consults/consulta10">Consultar</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -184,7 +184,7 @@ export default defineComponent({
             Identificar qué puntos de medición caen dentro de polígonos definidos como "Zonas de Riesgo Climático".
           </v-card-text>
           <v-card-text>
-            <v-btn color="primary" href="/consults/consulta8">Consultar</v-btn>
+            <v-btn color="primary" href="/consults/consulta11">Consultar</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -199,7 +199,7 @@ export default defineComponent({
             Consulta para detectar puntos de medición con coordenadas inválidas o geometrías corruptas.
           </v-card-text>
           <v-card-text>
-            <v-btn class="mt-8" color="primary" href="/consults/consulta8">Consultar</v-btn>
+            <v-btn class="mt-8" color="primary" href="/consults/consulta12">Consultar</v-btn>
           </v-card-text>
         </v-card>
       </v-col>

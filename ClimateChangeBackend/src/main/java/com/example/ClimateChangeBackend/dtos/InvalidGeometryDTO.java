@@ -2,11 +2,9 @@ package com.example.ClimateChangeBackend.dtos;
 
 import lombok.Data;
 
-import java.awt.*;
 @Data
-public class InvalidPointDTO {
+public class InvalidGeometryDTO {
     private Long id;
     private String wkt;
-    private Double latitud;
-    private Double longitud;
+    public String motivo;
 }

@@ -13,7 +13,10 @@ import Consulta5 from '@/views/consultsViews/Consulta5.vue'
 import Consulta6 from '@/views/consultsViews/Consulta6.vue'
 import Consulta7 from '@/views/consultsViews/Consulta7.vue'
 import Consulta8 from '@/views/consultsViews/Consulta8.vue'
-
+import Consulta9 from '@/views/consultsViews/Consulta9.vue'
+import Consulta10 from '@/views/consultsViews/Consulta10.vue'
+import Consulta11 from '@/views/consultsViews/Consulta11.vue'
+import Consulta12 from '@/views/consultsViews/Consulta12.vue'
 const routes = [
   { path: '/', name: 'home', component: HomeView},
   { path: '/login', name: 'login', component: LoginView },
@@ -29,7 +32,11 @@ const routes = [
   { path: '/consults/consulta5', name: 'consulta5', component: Consulta5, meta: { requiresAuth: true } },
   { path: '/consults/consulta6', name: 'consulta6', component: Consulta6, meta: { requiresAuth: true } },
   { path: '/consults/consulta7', name: 'consulta7', component: Consulta7, meta: { requiresAuth: true } },
-  { path: '/consults/consulta8', name: 'consulta8', component: Consulta8, meta: { requiresAuth: true } }
+  { path: '/consults/consulta8', name: 'consulta8', component: Consulta8, meta: { requiresAuth: true } },
+  { path: '/consults/consulta9', name: 'consulta9', component: Consulta9, meta: { requiresAuth: true } },
+  { path: '/consults/consulta10', name: 'consulta10', component: Consulta10, meta: { requiresAuth: true} },
+  { path: '/consults/consulta11', name: 'consulta11', component: Consulta11, meta: { requiresAuth: true} },
+  { path: '/consults/consulta12', name: 'consulta12', component: Consulta12, meta: { requiresAuth: true} }
 ]
 
 const router = createRouter({

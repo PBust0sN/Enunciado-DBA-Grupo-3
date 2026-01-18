@@ -1,8 +1,6 @@
 package com.example.ClimateChangeBackend.controllers;
 
-import com.example.ClimateChangeBackend.dtos.AffectedAreaRequest;
-import com.example.ClimateChangeBackend.dtos.AffectedAreaResponse;
-import com.example.ClimateChangeBackend.dtos.MeasurePointAreaResponse;
+import com.example.ClimateChangeBackend.dtos.*;
 import com.example.ClimateChangeBackend.entities.AffectedAreaEntity;
 import com.example.ClimateChangeBackend.services.AffectedAreaService;
 import lombok.AllArgsConstructor;
@@ -78,6 +76,19 @@ public class AffectedAreaController {
     public ResponseEntity<List<MeasurePointAreaResponse>> getMeasurePointsInRiskAreas() {
         return ResponseEntity.ok(affectedAreaService.findMeasurePointsInRiskAreas());
     }
+
+    // Consulta 4 lab2
+    @GetMapping("/getInvalidGeometry")
+    public ResponseEntity<List<InvalidGeometryDTO>> getInvalidGeometry() {
+        return ResponseEntity.ok().body(affectedAreaService.getInvalidGeometry());
+    }
+
+    @GetMapping("/getValidAreas")
+    public ResponseEntity<List<AffectedAreaDTO>> getValidAreas() {
+        return ResponseEntity.ok().body(affectedAreaService.getValidAreas());
+    }
+
+
 
     private AffectedAreaResponse toResponse(AffectedAreaEntity entity) {
         return AffectedAreaResponse.builder()
