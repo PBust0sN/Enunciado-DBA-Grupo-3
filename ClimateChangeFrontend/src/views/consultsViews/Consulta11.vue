@@ -6,6 +6,7 @@ import affectedAreasService from '@/services/affectedAreas.service';
 
 const mapRef = ref(null);
 const list = ref([]);
+const areas = ref([]);
 
 let map = null;
 let bounds = null;
@@ -63,11 +64,24 @@ const drawPoints = () => {
 };
 
 const fetchData = async () => {
-  const response = await affectedAreasService.getMeasurePointsInRiskAreas();
-  console.log('RAW DATA FROM BACKEND:', response.data);
+  bounds = L.latLngBounds([]);
 
-  list.value = response.data;
+  const pointsResponse =
+    await affectedAreasService.getMeasurePointsInRiskAreas();
+  list.value = pointsResponse.data;
+
+  const areasResponse =
+    await affectedAreasService.getValidAreas();
+  areas.value = areasResponse.data;
+
+  drawPolygons();
   drawPoints();
+};
+
+const fetchAreas = async () => {
+  const response = await affectedAreasService.getValidAreas();
+  console.log('VALID AREAS:', response.data);
+  areas.value = response.data;
 };
 
 onMounted(async () => {
@@ -79,6 +93,43 @@ onMounted(async () => {
     map.invalidateSize();
   }, 100);
 });
+
+
+const wktToLatLngs = (wkt) => {
+  if (!wkt || !wkt.includes('POLYGON')) return [];
+
+  const match = wkt.match(/\(\((.*)\)\)/);
+  if (!match) return [];
+
+  return match[1].split(',').map(pair => {
+    const [lng, lat] = pair.trim().split(/\s+/).map(Number);
+    return [lat, lng]; // Leaflet usa [lat, lng]
+  });
+};
+
+const drawPolygons = () => {
+  areas.value.forEach((area, index) => {
+    if (!area.wkt) return;
+
+    const latLngs = wktToLatLngs(area.wkt);
+    if (!latLngs.length) return;
+
+    const color = colors[index % colors.length];
+
+    const polygon = L.polygon(latLngs, {
+      color,
+      weight: 2,
+      fillOpacity: 0.3
+    })
+      .addTo(map)
+      .bindPopup(`
+        <strong>Área:</strong> ${area.name}<br/>
+        <strong>Tipo:</strong> ${area.areaType}
+      `);
+
+    bounds.extend(polygon.getBounds());
+  });
+};
 </script>
 
 <template>

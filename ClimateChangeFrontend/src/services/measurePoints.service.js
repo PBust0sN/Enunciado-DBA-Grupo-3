@@ -46,6 +46,9 @@ const get50kmCO2Temperature = () =>{
 const interpolateByNearestNeighbors = (lat, lon) =>{
     return api.get(`${basePath}/interpolateByNearestNeighbors/${lat}/${lon}`)
 }
+const getNoSensor = () => {
+    return api.get(`${basePath}/getNoSensor`)
+}
 export default {
     findById,
     getAll,
@@ -58,5 +61,6 @@ export default {
     getInvalidPoints,
     getMonthlyTendencies,
     get50kmCO2Temperature,
-    interpolateByNearestNeighbors
+    interpolateByNearestNeighbors,
+    getNoSensor
 }

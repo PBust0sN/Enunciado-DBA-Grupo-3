@@ -19,7 +19,7 @@ public interface MeasurePointsRepository {
     List<PointWithoutGeorefDTO> findPointsWithoutGeoreference();
     Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon, String type);
     List<InvalidPointDTO> findInvalidPoints();
-
+    List<MeasurePointsEntity> getNoSensor();
     List<MeasurePointsEntity> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude);
 
     // vista monthly tendency

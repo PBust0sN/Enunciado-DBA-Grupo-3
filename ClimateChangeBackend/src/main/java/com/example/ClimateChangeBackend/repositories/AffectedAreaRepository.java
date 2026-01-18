@@ -1,5 +1,7 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.AffectedAreaDTO;
+import com.example.ClimateChangeBackend.dtos.InvalidGeometryDTO;
 import com.example.ClimateChangeBackend.dtos.MeasurePointAreaResponse;
 import com.example.ClimateChangeBackend.entities.AffectedAreaEntity;
 
@@ -12,5 +14,7 @@ public interface AffectedAreaRepository {
     AffectedAreaEntity save(AffectedAreaEntity area);
     int deleteById(Long idArea);
     List<MeasurePointAreaResponse> findMeasurePointsInRiskAreas();
+    List<InvalidGeometryDTO> findInvalidGeometry();
+    List<AffectedAreaDTO> findValidAffectedAreas();
 }
 

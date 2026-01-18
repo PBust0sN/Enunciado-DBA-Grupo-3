@@ -1,11 +1,15 @@
 package com.example.ClimateChangeBackend.repositories;
 
+import com.example.ClimateChangeBackend.dtos.AffectedAreaDTO;
+import com.example.ClimateChangeBackend.dtos.InvalidGeometryDTO;
 import com.example.ClimateChangeBackend.dtos.MeasurePointAreaResponse;
 import com.example.ClimateChangeBackend.entities.AffectedAreaEntity;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.io.WKTReader;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -96,4 +100,48 @@ public class AffectedAreaRepositoryImpl implements AffectedAreaRepository {
                 .areaName(rs.getString("area_name"))
                 .build());
     }
+
+    // Consulta 4.2 para puntos
+    @Override
+    public List<InvalidGeometryDTO> findInvalidGeometry() {
+        String sql = """
+                SELECT id_area AS id,
+                       ST_AsText(geom) AS wkt,
+                       ST_IsValidReason(geom) AS motivo
+                FROM affected_areas
+                WHERE NOT ST_IsValid(geom);
+                """;
+        try{
+            return jdbcTemplate.query(
+                    sql,
+                    new BeanPropertyRowMapper<>(InvalidGeometryDTO.class)
+            );
+
+        }catch (EmptyResultDataAccessException e){
+            return List.of();
+        }
+    }
+
+    @Override
+    public List<AffectedAreaDTO> findValidAffectedAreas() {
+        String sql = """
+                SELECT id_area as idArea,
+                    name,
+                    area_type as areaType,
+                    ST_AsText(geom) AS wkt
+                FROM affected_areas
+                WHERE ST_IsValid(geom);
+                """;
+        try{
+            return jdbcTemplate.query(
+                    sql,
+                    new BeanPropertyRowMapper<>(AffectedAreaDTO.class)
+            );
+
+        }catch (EmptyResultDataAccessException e){
+            return List.of();
+        }
+    }
+
+
 }

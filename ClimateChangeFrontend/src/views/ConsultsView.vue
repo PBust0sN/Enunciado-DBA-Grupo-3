@@ -199,7 +199,7 @@ export default defineComponent({
             Consulta para detectar puntos de medición con coordenadas inválidas o geometrías corruptas.
           </v-card-text>
           <v-card-text>
-            <v-btn class="mt-8" color="primary" href="/consults/consulta8">Consultar</v-btn>
+            <v-btn class="mt-8" color="primary" href="/consults/consulta12">Consultar</v-btn>
           </v-card-text>
         </v-card>
       </v-col>

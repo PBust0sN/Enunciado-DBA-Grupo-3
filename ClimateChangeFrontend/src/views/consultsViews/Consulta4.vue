@@ -1,11 +1,16 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import measurementService from '@/services/measurement.service';
-
+import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 const route = useRoute();
 
 const measurements = ref([]);
+const notAuthorized = ref(false);
+const router = useRouter();
+const isAdmin = () => {
+  return localStorage.getItem('role') === 'ADMIN';
+};
 
 const fetchData = async () => {
     try {
@@ -17,12 +22,38 @@ const fetchData = async () => {
     }
 }
 
-onMounted(fetchData);
+onMounted(async () => {
+  if (!isAdmin()) {
+    notAuthorized.value = true;
+
+    // ⏳ espera 2 segundos y redirige
+    setTimeout(() => {
+      router.push('/consults');
+    }, 5000);
+
+    return; // ⛔ no ejecuta la consulta
+  }
+  fetchData
+});
+
  </script>
 
  <template>
     <v-container>
-        <v-card elevation="2" class="pa-4">
+
+    <!-- 🚫 Alerta -->
+    <v-alert
+      v-if="notAuthorized"
+      type="error"
+      variant="tonal"
+      class="mb-4"
+    >
+      No estás autorizado para acceder a esta información.
+      Serás redirigido automáticamente.
+    </v-alert>
+
+
+        <v-card v-if="!notAuthorized" elevation="2" class="pa-4">
         <v-card-title class="text-h6 font-weight-bold">
             4. Detección de Eventos Extremos
         </v-card-title>

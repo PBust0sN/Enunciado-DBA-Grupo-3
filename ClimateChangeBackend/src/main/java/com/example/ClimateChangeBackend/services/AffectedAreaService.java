@@ -1,5 +1,8 @@
 package com.example.ClimateChangeBackend.services;
 
+import com.example.ClimateChangeBackend.dtos.AffectedAreaDTO;
+import com.example.ClimateChangeBackend.dtos.InvalidGeometryDTO;
+import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
 import com.example.ClimateChangeBackend.dtos.MeasurePointAreaResponse;
 import com.example.ClimateChangeBackend.entities.AffectedAreaEntity;
 import com.example.ClimateChangeBackend.repositories.AffectedAreaRepository;
@@ -53,5 +56,14 @@ public class AffectedAreaService {
         } catch (Exception e) {
             throw new RuntimeException("Error ejecutando la consulta: " + e.getMessage());
         }
+    }
+
+    // Consulta 4.2 para poligonos
+    public List<InvalidGeometryDTO> getInvalidGeometry() {
+        return affectedAreaRepository.findInvalidGeometry();
+    }
+
+    public List<AffectedAreaDTO> getValidAreas() {
+        return affectedAreaRepository.findValidAffectedAreas();
     }
 }

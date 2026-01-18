@@ -195,10 +195,20 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
     @Override
     public List<InvalidPointDTO> findInvalidPoints() {
         String sql = """
-                SELECT id_measure_points,
-                       ST_AsText(geom) AS wkt
+                SELECT id_measure_points AS id,
+                       ST_AsText(geom) AS wkt,
+                       latitud,
+                       longitud
                 FROM measure_points
-                WHERE NOT ST_IsValid(geom);
+                WHERE geom IS NULL
+                      OR NOT ST_IsValid(geom)
+                      OR ST_SRID(geom) <> 4326
+                      OR ST_X(geom) NOT BETWEEN -180 AND 180
+                      OR ST_Y(geom) NOT BETWEEN -90 AND 90
+                      OR (ST_X(geom) = 0 AND ST_Y(geom) = 0)
+                      OR latitud = 0 AND longitud = 0
+                      OR latitud > 90 OR latitud < -90
+                      OR longitud > 180 OR longitud < -180;
                 """;
         try{
             return jdbcTemplate.query(
@@ -314,6 +324,24 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
             );
             System.out.println(co2DistanceDTOS);
             return co2DistanceDTOS;
+        }catch (EmptyResultDataAccessException e){
+            return List.of();
+        }
+    }
+
+    public List<MeasurePointsEntity> getNoSensor() {
+        String sql = """
+                SELECT *
+                FROM measure_points
+                WHERE sensor_type = 'Sin sensor';
+                """;
+        try{
+            List<MeasurePointsEntity> sinSensor = jdbcTemplate.query(
+                    sql,
+                    new BeanPropertyRowMapper<>(MeasurePointsEntity.class)
+            );
+            System.out.println(sinSensor);
+            return sinSensor;
         }catch (EmptyResultDataAccessException e){
             return List.of();
         }
