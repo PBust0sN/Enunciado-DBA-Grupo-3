@@ -126,7 +126,7 @@ public class MeasurePointsService {
         return measurePointsRepository.get50kmCO2Temperature();
     }
 
-    public List<MeasurePointsEntity> getSinSensor() {
+    public List<MeasurePointDTO> getSinSensor() {
         return measurePointsRepository.getNoSensor();
     }
 }

@@ -1,10 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
-import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
-import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
-import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
-import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
-import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
+import com.example.ClimateChangeBackend.dtos.*;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -329,16 +325,20 @@ public class MeasurePointsRepositoryImp implements MeasurePointsRepository {
         }
     }
 
-    public List<MeasurePointsEntity> getNoSensor() {
+    public List<MeasurePointDTO> getNoSensor() {
         String sql = """
-                SELECT *
+                SELECT id_measure_points as id,
+                       latitud,
+                       longitud,
+                       ST_AsText(geom) as geom,
+                       sensor_type as sensorType
                 FROM measure_points
                 WHERE sensor_type = 'Sin sensor';
                 """;
         try{
-            List<MeasurePointsEntity> sinSensor = jdbcTemplate.query(
+            List<MeasurePointDTO> sinSensor = jdbcTemplate.query(
                     sql,
-                    new BeanPropertyRowMapper<>(MeasurePointsEntity.class)
+                    new BeanPropertyRowMapper<>(MeasurePointDTO.class)
             );
             System.out.println(sinSensor);
             return sinSensor;

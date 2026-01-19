@@ -1,9 +1,6 @@
 package com.example.ClimateChangeBackend.controllers;
 
-import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
-import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
-import com.example.ClimateChangeBackend.dtos.MeasurePointRequest;
-import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
+import com.example.ClimateChangeBackend.dtos.*;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 import com.example.ClimateChangeBackend.services.MeasurePointsService;
 import jakarta.validation.Valid;
@@ -104,7 +101,7 @@ public class    MeasurePointsController {
     }
 
     @GetMapping("/getNoSensor")
-    public ResponseEntity<List<MeasurePointsEntity>> getNoSensor(){
+    public ResponseEntity<List<MeasurePointDTO>> getNoSensor(){
         return ResponseEntity.ok().body(measurePointsService.getSinSensor());
     }
 }
