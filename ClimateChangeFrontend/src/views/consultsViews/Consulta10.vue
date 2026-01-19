@@ -76,7 +76,7 @@ onMounted(fetchNoSensorPoints);
         <template #item="{ item, props }">
           <v-list-item
             v-bind="props"
-            :title="`ID: ${item.raw.idMeasurePoints}`"
+            :title="`ID: ${item.raw.id}`"
             :subtitle="`Lat: ${item.raw.latitud}, Lon: ${item.raw.longitud}`"
           />
         </template>

@@ -1,10 +1,6 @@
 package com.example.ClimateChangeBackend.repositories;
 
-import com.example.ClimateChangeBackend.dtos.CO2DistanceDTO;
-import com.example.ClimateChangeBackend.dtos.InvalidPointDTO;
-import com.example.ClimateChangeBackend.dtos.MonthlyTendencyDTO;
-import com.example.ClimateChangeBackend.dtos.PointVariationDTO;
-import com.example.ClimateChangeBackend.dtos.PointWithoutGeorefDTO;
+import com.example.ClimateChangeBackend.dtos.*;
 import com.example.ClimateChangeBackend.entities.MeasurePointsEntity;
 
 import java.util.List;
@@ -19,7 +15,7 @@ public interface MeasurePointsRepository {
     List<PointWithoutGeorefDTO> findPointsWithoutGeoreference();
     Optional<MeasurePointsEntity> findByLatitudeAndLongitude(double lat, double lon, String type);
     List<InvalidPointDTO> findInvalidPoints();
-    List<MeasurePointsEntity> getNoSensor();
+    List<MeasurePointDTO> getNoSensor();
     List<MeasurePointsEntity> getPointsLessThan50ByLatitudeAndLongitude(double latitude, double longitude);
 
     // vista monthly tendency

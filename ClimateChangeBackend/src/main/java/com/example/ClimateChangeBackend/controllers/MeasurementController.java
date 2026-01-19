@@ -30,7 +30,7 @@ public class MeasurementController {
 
 
     @GetMapping("/extreme")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')")
     public List<Map<String, Object>> extremeEventDetection() {
         return measurementService.extremeEventDetection();
     }

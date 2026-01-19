@@ -8,7 +8,11 @@ const notAuthorized = ref(false);
 const router = useRouter();
 
 const isAdmin = () => {
-  return localStorage.getItem('role') === 'ADMIN';
+  const userStr = localStorage.getItem('user');
+  if (!userStr) return false;
+
+  const user = JSON.parse(userStr);
+  return user.role === 'ROLE_ADMIN';
 };
 
 onMounted(async () => {
